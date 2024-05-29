@@ -66,6 +66,14 @@ return packer.startup(function(use)
   use "williamboman/mason.nvim" -- simple to use language server installer
   use "williamboman/mason-lspconfig.nvim" -- simple to use language server installer
 
+  -- treesitter
+  use {
+    "nvim-treesitter/nvim-treesitter",
+    run = ":TSUpdate",
+  }
+  use "nvim-treesitter/nvim-treesitter-context"
+  use "JoosepAlviste/nvim-ts-context-commentstring"
+
   -- Telescope
   use "nvim-telescope/telescope.nvim"
   use 'nvim-telescope/telescope-media-files.nvim'
@@ -84,7 +92,63 @@ return packer.startup(function(use)
   }
 
   -- gtags
-  use "ludovicchabant/vim-gutentags"
+  use "ivechan/telescope-gtags"
+
+  -- wilder 终端悬浮窗
+  use "gelguy/wilder.nvim"
+  use "romgrk/fzy-lua-native"
+
+  --  use "yaocccc/nvim-lines.lua"
+  use "yaocccc/nvim-hlchunk"
+  use "yaocccc/nvim-hl-mdcodeblock.lua"
+
+  -- surround
+  use "kylechui/nvim-surround"
+
+  -- autopair
+  use "windwp/nvim-autopairs"
+
+  -- easymotion
+  use "folke/flash.nvim"
+  use "smoka7/hop.nvim"
+
+  -- outline
+  use 'simrat39/symbols-outline.nvim'
+
+  -- cursorline
+  use 'yamatsum/nvim-cursorline'
+
+  -- 搜索和替换
+  use 'nvim-pack/nvim-spectre'
+
+  -- 替换Esc
+  use 'max397574/better-escape.nvim'
+
+  -- mark
+  -- use 'chentoast/marks.nvim'
+  use 'fnune/recall.nvim'
+
+  -- noice 
+  use {
+    "folke/noice.nvim",
+    requires = {
+      -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+      "MunifTanjim/nui.nvim",
+      -- OPTIONAL:
+      --   `nvim-notify` is only needed, if you want to use the notification view.
+      --   If not available, we use `mini` as the fallback
+      "rcarriga/nvim-notify",
+    }
+  }
+
+  -- 窗口聚焦
+  use {
+    "nvim-zh/colorful-winsep.nvim",
+    config = function ()
+        require('colorful-winsep').setup()
+    end
+  }
+
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins
