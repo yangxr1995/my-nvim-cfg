@@ -162,6 +162,9 @@ return packer.startup(function(use)
   use {'kevinhwang91/nvim-bqf', ft='qf'}
   use {'rmagatti/goto-preview'}
 
+  -- UI Component Library
+  use {'MunifTanjim/nui.nvim'}
+
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins
   if PACKER_BOOTSTRAP then
