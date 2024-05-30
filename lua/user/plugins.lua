@@ -78,6 +78,8 @@ return packer.startup(function(use)
   -- Telescope
   use "nvim-telescope/telescope.nvim"
   use 'nvim-telescope/telescope-media-files.nvim'
+  use { 'nvim-telescope/telescope-fzf-native.nvim', 
+        run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
 
   -- File explorer
   use "nvim-tree/nvim-tree.lua"
@@ -152,6 +154,13 @@ return packer.startup(function(use)
 
   -- terminal
   use 'akinsho/toggleterm.nvim'
+
+  -- debug
+  -- use 'sakhnik/nvim-gdb'
+
+  -- preview
+  use {'kevinhwang91/nvim-bqf', ft='qf'}
+  use {'rmagatti/goto-preview'}
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins
