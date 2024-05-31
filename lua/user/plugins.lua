@@ -162,8 +162,47 @@ return packer.startup(function(use)
   use {'kevinhwang91/nvim-bqf', ft='qf'}
   use {'rmagatti/goto-preview'}
 
-  -- UI Component Library
-  use {'MunifTanjim/nui.nvim'}
+  -- gpt
+  use({
+    'yangxr1995/nvim-magic',
+    requires = {
+      'nvim-lua/plenary.nvim',
+      'MunifTanjim/nui.nvim'
+    }
+  })
+
+  use {
+    "Exafunction/codeium.nvim",
+    requires = {
+        "nvim-lua/plenary.nvim",
+        "hrsh7th/nvim-cmp",
+    },
+    config = function()
+        require("codeium").setup({
+        })
+    end
+  }
+
+--  use {
+--      'BlazeMCworld/open-codeium.nvim',
+--      requires = {
+--        "MunifTanjim/nui.nvim",
+--      },
+--      config = function ()
+--        local codeium = require("codeium")
+--        codeium.setup()
+--        vim.keymap.set("i", "<Tab>", function()
+--            if codeium.completions.is_shown() then
+--                codeium.completions.accept()
+--            else
+--                vim.fn.feedkeys("    ", "i")
+--            end
+--        end)
+--        vim.keymap.set("i", "<M-Right>", codeium.completions.next)
+--        vim.keymap.set("i", "<M-Left>", codeium.completions.prev)
+--      end
+--
+--    }
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins
