@@ -5,8 +5,8 @@ if not status_ok then
 end
 
 treesitter.setup {
-  ensure_installed = {"c", "cpp", "bash", "python", "lua", "markdown_inline", "markdown", "regex"},
-  sync_install = true, 
+  ensure_installed = {"c", "cpp", "bash", "python", "lua", "markdown_inline", "markdown", },
+  sync_install = true,
   ignore_install = { "" }, -- List of parsers to ignore installing
   highlight = {
     enable = true, -- false will disable the whole extension

@@ -16,12 +16,12 @@ if fn.empty(fn.glob(install_path)) > 0 then
 end
 
 -- Autocommand that reloads neovim whenever you save the plugins.lua file
-vim.cmd [[
-  augroup packer_user_config
-    autocmd!
-    autocmd BufWritePost plugins.lua source <afile> | PackerSync
-  augroup end
-]]
+-- vim.cmd [[
+--   augroup packer_user_config
+--     autocmd!
+--     autocmd BufWritePost plugins.lua source <afile> | PackerSync
+--   augroup end
+-- ]]
 
 -- Use a protected call so we don't error out on first use
 local status_ok, packer = pcall(require, "packer")
@@ -155,6 +155,9 @@ return packer.startup(function(use)
   -- terminal
   use 'akinsho/toggleterm.nvim'
 
+  -- auto save
+  use 'tmillr/sos.nvim'
+
   -- debug
   -- use 'sakhnik/nvim-gdb'
 
@@ -183,26 +186,8 @@ return packer.startup(function(use)
     end
   }
 
---  use {
---      'BlazeMCworld/open-codeium.nvim',
---      requires = {
---        "MunifTanjim/nui.nvim",
---      },
---      config = function ()
---        local codeium = require("codeium")
---        codeium.setup()
---        vim.keymap.set("i", "<Tab>", function()
---            if codeium.completions.is_shown() then
---                codeium.completions.accept()
---            else
---                vim.fn.feedkeys("    ", "i")
---            end
---        end)
---        vim.keymap.set("i", "<M-Right>", codeium.completions.next)
---        vim.keymap.set("i", "<M-Left>", codeium.completions.prev)
---      end
---
---    }
+  -- colorschemes
+  use 'sainnhe/sonokai'
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins
