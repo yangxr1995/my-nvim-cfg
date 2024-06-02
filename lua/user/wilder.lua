@@ -18,6 +18,12 @@ wilder.set_option('renderer', wilder.popupmenu_renderer(
   })
 ))
 
+vim.keymap.set('c', '<tab>', '<cmd>lua require("wilder").next()<CR>', { desc = "next command"})
+vim.keymap.set('c', '<up>', '<cmd>lua require("wilder").previous()<CR>', { desc = "previous command"})
+vim.keymap.set('c', '<down>', '<cmd>lua require("wilder").next()<CR>', { desc = "next command "})
+vim.keymap.set('c', '<C-k>', '<cmd>lua require("wilder").previous()<CR>', { desc = "previous command"})
+vim.keymap.set('c', '<C-j>', '<cmd>lua require("wilder").next()<CR>', { desc = "next command"})
+
 -- local gradient = {
 --   '#f4468f', '#fd4a85', '#ff507a', '#ff566f', '#ff5e63',
 --   '#ff6658', '#ff704e', '#ff7a45', '#ff843d', '#ff9036',

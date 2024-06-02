@@ -4,3 +4,14 @@ if not status_ok then
   return
 end
 
+Flash.setup()
+
+vim.keymap.set('n', 'f', function() require("flash").jump() end, {
+    desc = "flash"
+})
+vim.keymap.set('x', 'f', function() require("flash").jump() end, {
+    desc = "flash"
+})
+vim.keymap.set('o', 'f', function() require("flash").jump() end, {
+    desc = "flash"
+})
