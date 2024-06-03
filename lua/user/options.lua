@@ -46,4 +46,3 @@ vim.cmd [[set iskeyword+=-]]
 vim.cmd [[set formatoptions-=cro]] -- TODO: this doesn't seem to work
 vim.cmd [[let g:termdebug_wide=1]]
 vim.cmd [[set t_Co=256]]
-vim.cmd.colorscheme('sonokai')
