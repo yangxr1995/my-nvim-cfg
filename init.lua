@@ -1,28 +1,6 @@
-require "user.options"
-require "user.keymaps"
-require "user.plugins"
-require "user.colorscheme"
-require "user.cmp"
-require "user.lsp"
-require "user.telescope"
-require "user.tree"
-require "user.bufferline"
-require "user.lualine"
-require "user.gtags"
-require "user.treesitter"
-require "user.hl-mdcodeblock"
-require "user.autopairs"
-require "user.flash"
-require "user.surround"
-require "user.outline"
--- require "user.hop"
-require "user.cursorline"
-require "user.escape"
-require "user.mark"
--- require "user.noice"
-require "user.wilder"
-require "user.term"
-require "user.preview"
-require "user.gpt"
-require "user.autosave"
-require "user.todo"
+require("basic.options")
+require("basic.keymap")
+require("basic.lazy")
+
+vim.cmd([[highlight CursorLine cterm=NONE ctermbg=235 ctermfg=NONE guibg=#3a3a3a]])
+vim.cmd([[highlight CursorLine cterm=bold,underline ctermbg=235 guibg=#444444]])
