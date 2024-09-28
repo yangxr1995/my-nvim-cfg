@@ -65,6 +65,7 @@ return {
                     end,
                 },
                 sources = cmp.config.sources {
+                    { name = "codeium" },
                     { name = 'nvim_lsp' },
                     { name = 'nvim_lua' },
                     { name = 'luasnip' },
@@ -72,8 +73,19 @@ return {
                     { name = "buffer" },
                 },
                 mapping = cmp.mapping.preset.insert {
-                    ["<Tab>"] = cmp.mapping(function(fallback)
-                        if cmp.visible() then
+
+                    ["<C-e>"] = cmp.mapping {
+                        i = cmp.mapping.abort(),
+                        c = cmp.mapping.close(),
+                    },
+
+                    ["<C-f>"] = cmp.mapping {
+                        i = cmp.mapping.scroll_docs(1),
+                        c = cmp.mapping.close(),
+                    },
+                    ["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-1), { "i" }),
+                    ["<C-j>"] = cmp.mapping(function(fallback)
+                        if cmp.visible() or cmp.cmdline() then
                             cmp.select_next_item()
                             -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable()
                             -- they way you will only jump inside the snippet region
@@ -84,18 +96,19 @@ return {
                         else
                             fallback()
                         end
-                    end, { "i", "s" }),
-
-                    ["<S-Tab>"] = cmp.mapping(function(fallback)
-                        if cmp.visible() then
+                    end, { "i", "s", "c" }),
+                    ["<C-k>"] = cmp.mapping(function(fallback)
+                        if cmp.visible() or cmp.cmdline() then
                             cmp.select_prev_item()
                         elseif luasnip.jumpable(-1) then
                             luasnip.jump(-1)
                         else
                             fallback()
                         end
-                    end, { "i", "s" }),
+                    end, { "i", "s", "c" }),
                     ['<CR>'] = cmp.mapping.confirm({ select = false }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+
+
                 },
 
                 experimental = {
@@ -233,8 +246,47 @@ return {
                             capabilities = capabilities,
                         }
                     end,
-                }
+                },
             })
+
+            local signs = {
+                { name = "DiagnosticSignError", text = "" },
+                { name = "DiagnosticSignWarn", text = "" },
+                { name = "DiagnosticSignHint", text = "" },
+                { name = "DiagnosticSignInfo", text = "" },
+            }
+
+
+
+            local config = {
+                -- 诊断信息是否以virtual_text显示
+                virtual_text = false,
+                signs = {
+                    active = signs,
+                },
+                update_in_insert = true,
+                underline = true,
+                severity_sort = true,
+                float = {
+                    focusable = false,
+                    style = "minimal",
+                    border = "rounded",
+                    source = "always",
+                    header = "",
+                    prefix = "",
+                },
+            }
+
+            vim.diagnostic.config(config)
         end
     },
+    {
+        'simrat39/symbols-outline.nvim',
+        config = function()
+            require("symbols-outline").setup({
+            })
+            local keymap = vim.api.nvim_set_keymap
+            keymap("n", "<F3>", ":SymbolsOutline<CR>", { desc = "打开/关闭符号表" })
+        end
+    }
 }

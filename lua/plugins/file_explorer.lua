@@ -1,6 +1,9 @@
 return {
     {
         "nvim-tree/nvim-tree.lua",
+        dependencies = {
+            "nvim-tree/nvim-web-devicons"
+        },
         config = function()
             local status_ok, tree = pcall(require, "nvim-tree")
             if not status_ok then

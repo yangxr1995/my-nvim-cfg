@@ -49,7 +49,3 @@ keymap("t", "<C-h>", "<C-\\><C-N><C-w>h", term_opts)
 keymap("t", "<C-j>", "<C-\\><C-N><C-w>j", term_opts)
 keymap("t", "<C-k>", "<C-\\><C-N><C-w>k", term_opts)
 keymap("t", "<C-l>", "<C-\\><C-N><C-w>l", term_opts)
-
-
-keymap("n", "<C-j>", "<C-n>", { noremap = true, silent = true, desc = "文本块移动" })
-keymap("t", "<C-j>", "<C-n>", { noremap = true, silent = true, desc = "文本块移动" })
