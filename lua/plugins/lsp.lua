@@ -237,10 +237,10 @@ return {
                     }
                 }
             })
-            require("guard").setup({
-                lsp_as_default_formatter = true,
-                vim.keymap.set({ "n", "v" }, "\\f", "<cmd>GuardFmt<CR>", { noremap = true })
-            })
+            -- require("guard").setup({
+            --     lsp_as_default_formatter = true,
+            --     vim.keymap.set({ "n", "v" }, "\\f", "<cmd>GuardFmt<CR>", { noremap = true })
+            -- })
             require("mason").setup()
             local capabilities = require('cmp_nvim_lsp').default_capabilities()
             require("mason-lspconfig").setup({
