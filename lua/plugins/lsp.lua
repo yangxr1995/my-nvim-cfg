@@ -113,8 +113,35 @@ return {
                             fallback()
                         end
                     end, { "i", "s", "c" }),
-                    ['<CR>'] = cmp.mapping.confirm({ select = false }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-
+                    ['<CR>'] = cmp.mapping.confirm({ select = true }),
+                    ["<Tab>"] = cmp.mapping(function(fallback)
+                        if cmp.visible() then
+                            cmp.select_next_item()
+                        elseif luasnip.expandable() then
+                            luasnip.expand()
+                        elseif luasnip.expand_or_jumpable() then
+                            luasnip.expand_or_jump()
+                        elseif check_backspace() then
+                            fallback()
+                        else
+                            fallback()
+                        end
+                    end, {
+                        "i",
+                        "s",
+                    }),
+                    ["<S-Tab>"] = cmp.mapping(function(fallback)
+                        if cmp.visible() then
+                            cmp.select_prev_item()
+                        elseif luasnip.jumpable(-1) then
+                            luasnip.jump(-1)
+                        else
+                            fallback()
+                        end
+                    end, {
+                        "i",
+                        "s",
+                    }),
 
                 },
 
@@ -237,10 +264,10 @@ return {
                     }
                 }
             })
-            -- require("guard").setup({
-            --     lsp_as_default_formatter = true,
-            --     vim.keymap.set({ "n", "v" }, "\\f", "<cmd>GuardFmt<CR>", { noremap = true })
-            -- })
+            require("guard").setup({
+                lsp_as_default_formatter = true,
+                vim.keymap.set({ "n", "v" }, "\\f", "<cmd>GuardFmt<CR>", { noremap = true })
+            })
             require("mason").setup()
             local capabilities = require('cmp_nvim_lsp').default_capabilities()
             require("mason-lspconfig").setup({
