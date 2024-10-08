@@ -178,7 +178,7 @@ return {
             "nvimdev/guard-collection",
             "williamboman/mason.nvim",
             "williamboman/mason-lspconfig.nvim",
-            { "nvimdev/guard.nvim", ft = { "bash", "c", "cpp", "json", "lua", "python" } },
+            -- { "nvimdev/guard.nvim", ft = { "bash", "c", "cpp", "json", "lua", "python" } },
             "folke/neoconf.nvim",
             "folke/neodev.nvim",
             {
@@ -222,12 +222,12 @@ return {
                 end
 
                 --format
-                local ft = require('guard.filetype')
-                ft('c'):fmt('clang-format')
-                ft('cpp'):fmt('clang-format')
+                -- local ft = require('guard.filetype')
+                -- ft('c'):fmt('clang-format')
+                -- ft('cpp'):fmt('clang-format')
                 -- ft('lua'):fmt('stylua'):append('lsp')
-                ft('python'):fmt('black')
-                ft('sh'):fmt('lsp')
+                -- ft('python'):fmt('black')
+                -- ft('sh'):fmt('lsp')
 
                 nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
                 nmap('gd', require "telescope.builtin".lsp_definitions, '[G]oto [D]efinition')
@@ -264,10 +264,10 @@ return {
                     }
                 }
             })
-            require("guard").setup({
-                lsp_as_default_formatter = true,
-                vim.keymap.set({ "n", "v" }, "\\f", "<cmd>GuardFmt<CR>", { noremap = true })
-            })
+            -- require("guard").setup({
+            --     lsp_as_default_formatter = true,
+            --     vim.keymap.set({ "n", "v" }, "\\f", "<cmd>GuardFmt<CR>", { noremap = true })
+            -- })
             require("mason").setup()
             local capabilities = require('cmp_nvim_lsp').default_capabilities()
             require("mason-lspconfig").setup({

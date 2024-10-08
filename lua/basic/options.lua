@@ -50,7 +50,7 @@ vim.cmd [[set background=dark]]
 
 
 vim.opt.virtualedit = "block"
-vim.opt.signcolumn = "no"
+-- vim.opt.signcolumn = "no"
 
 
 -- vim.cmd.colorscheme('sonokai')
