@@ -76,7 +76,19 @@ return {
                         return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
                     end,
                 },
-
+{
+                    name = 'attach to 192.168.89.79:1234 (ARM)',
+                    type = 'cppdbg',
+                    request = 'launch',
+                    MIMode = 'gdb',
+                    miDebuggerServerAddress = '192.168.89.79:1234',
+                    miDebuggerPath = '/usr/local/gdb-arm/bin/arm-linux-gdb',
+                    miDebuggerArgs = '--eval-command "set solib-sear ./" --eval-command "set sysroot ./"',
+                    cwd = '${workspaceFolder}',
+                    program = function()
+                        return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+                    end,
+                },
                 {
                     name = 'attach to 192.168.0.1:1234 (ARM)',
                     type = 'cppdbg',
