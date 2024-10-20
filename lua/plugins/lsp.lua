@@ -17,7 +17,15 @@ return {
                     "L3MON4D3/LuaSnip",
                     dependencies = {
                         "rafamadriz/friendly-snippets",
-                    }
+                    },
+                    -- follow latest release.
+                    version = "v2.*", -- Replace <CurrentMajor> by the latest released major (first number of latest release)
+                    -- install jsregexp (optional!).
+                    build = "make install_jsregexp",
+                    config = function()
+                        require("luasnip.loaders.from_snipmate").lazy_load()
+                        require("luasnip.loaders.from_vscode").lazy_load({ paths = { "./snippets" } })
+                    end
                 }
             },
         },
@@ -26,7 +34,7 @@ return {
                 unpack = unpack or table.unpack
                 local line, col = unpack(vim.api.nvim_win_get_cursor(0))
                 return col ~= 0 and
-                    vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+                vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
             end
             require("luasnip.loaders.from_vscode").lazy_load()
             require("luasnip.loaders.from_snipmate").lazy_load({ path = { "~/.config/nvim/snippets" } })
@@ -127,49 +135,49 @@ return {
                             fallback()
                         end
                     end, {
-                        "i",
-                        "s",
-                    }),
-                    ["<S-Tab>"] = cmp.mapping(function(fallback)
-                        if cmp.visible() then
-                            cmp.select_prev_item()
-                        elseif luasnip.jumpable(-1) then
-                            luasnip.jump(-1)
-                        else
-                            fallback()
-                        end
-                    end, {
-                        "i",
-                        "s",
-                    }),
+                    "i",
+                    "s",
+                }),
+                ["<S-Tab>"] = cmp.mapping(function(fallback)
+                    if cmp.visible() then
+                        cmp.select_prev_item()
+                    elseif luasnip.jumpable(-1) then
+                        luasnip.jump(-1)
+                    else
+                        fallback()
+                    end
+                end, {
+                "i",
+                "s",
+            }),
 
-                },
+        },
 
-                experimental = {
-                    ghost_text = true,
-                },
-            }
+        experimental = {
+            ghost_text = true,
+        },
+    }
 
-            cmp.setup.cmdline('/', {
-                mapping = cmp.mapping.preset.cmdline(),
-                sources = {
-                    { name = 'buffer' },
-                }
-            })
+    cmp.setup.cmdline('/', {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = {
+            { name = 'buffer' },
+        }
+    })
 
-            cmp.setup.cmdline(':', {
-                mapping = cmp.mapping.preset.cmdline(),
-                sources = cmp.config.sources({
-                    { name = 'path' },
-                    { name = 'cmdline' }
-                })
-            })
+    cmp.setup.cmdline(':', {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = cmp.config.sources({
+            { name = 'path' },
+            { name = 'cmdline' }
+        })
+    })
 
-            vim.fn.sign_define('DiagnosticSignError', { text = '🤣', texthl = 'DiagnosticSignError' })
-            vim.fn.sign_define('DiagnosticSignWarn', { text = '🧐', texthl = 'DiagnosticSignWarn' })
-            vim.fn.sign_define('DiagnosticSignInfo', { text = '🫠', texthl = 'DiagnosticSignInfo' })
-            vim.fn.sign_define('DiagnosticSignHint', { text = '🤔', texthl = 'DiagnosticSignHint' })
-        end,
+    vim.fn.sign_define('DiagnosticSignError', { text = '🤣', texthl = 'DiagnosticSignError' })
+    vim.fn.sign_define('DiagnosticSignWarn', { text = '🧐', texthl = 'DiagnosticSignWarn' })
+    vim.fn.sign_define('DiagnosticSignInfo', { text = '🫠', texthl = 'DiagnosticSignInfo' })
+    vim.fn.sign_define('DiagnosticSignHint', { text = '🤔', texthl = 'DiagnosticSignHint' })
+end,
     },
     {
         "neovim/nvim-lspconfig",
@@ -246,81 +254,81 @@ return {
                 nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
                 -- nmap('gr', vim.lsp.buf.references, '[G]oto [R]eferences')
                 --nmap("\\f", function()
-                --vim.lsp.buf.format { async = true }
-                --end, "[F]ormat code")
-                --nmap("\\f", "<cmd>GuardFmt<CR>", "[F]ormat code")
-            end
-            require("neoconf").setup()
-            require("neodev").setup()
-            require("fidget").setup()
-            require("lspsaga").setup({
-                lightbulb = {
-                    enble = false,
-                    sign = false,
-                },
-                rename = {
-                    keys = {
-                        quit = '<esc>',
-                    }
-                }
-            })
-            -- require("guard").setup({
-            --     lsp_as_default_formatter = true,
-            --     vim.keymap.set({ "n", "v" }, "\\f", "<cmd>GuardFmt<CR>", { noremap = true })
-            -- })
-            require("mason").setup()
-            local capabilities = require('cmp_nvim_lsp').default_capabilities()
-            require("mason-lspconfig").setup({
-                ensure_installed = vim.tbl_keys(servers),
-                handlers = {
-                    function(server_name) -- default handler (optional)
-                        require("lspconfig")[server_name].setup {
-                            settings = servers[server_name],
-                            on_attach = on_attach,
-                            capabilities = capabilities,
+                    --vim.lsp.buf.format { async = true }
+                    --end, "[F]ormat code")
+                    --nmap("\\f", "<cmd>GuardFmt<CR>", "[F]ormat code")
+                end
+                require("neoconf").setup()
+                require("neodev").setup()
+                require("fidget").setup()
+                require("lspsaga").setup({
+                    lightbulb = {
+                        enble = false,
+                        sign = false,
+                    },
+                    rename = {
+                        keys = {
+                            quit = '<esc>',
                         }
-                    end,
-                },
-            })
+                    }
+                })
+                -- require("guard").setup({
+                    --     lsp_as_default_formatter = true,
+                    --     vim.keymap.set({ "n", "v" }, "\\f", "<cmd>GuardFmt<CR>", { noremap = true })
+                    -- })
+                    require("mason").setup()
+                    local capabilities = require('cmp_nvim_lsp').default_capabilities()
+                    require("mason-lspconfig").setup({
+                        ensure_installed = vim.tbl_keys(servers),
+                        handlers = {
+                            function(server_name) -- default handler (optional)
+                                require("lspconfig")[server_name].setup {
+                                    settings = servers[server_name],
+                                    on_attach = on_attach,
+                                    capabilities = capabilities,
+                                }
+                            end,
+                        },
+                    })
 
-            local signs = {
-                { name = "DiagnosticSignError", text = "" },
-                { name = "DiagnosticSignWarn", text = "" },
-                { name = "DiagnosticSignHint", text = "" },
-                { name = "DiagnosticSignInfo", text = "" },
+                    local signs = {
+                        { name = "DiagnosticSignError", text = "" },
+                        { name = "DiagnosticSignWarn", text = "" },
+                        { name = "DiagnosticSignHint", text = "" },
+                        { name = "DiagnosticSignInfo", text = "" },
+                    }
+
+
+
+                    local config = {
+                        -- 诊断信息是否以virtual_text显示
+                        virtual_text = false,
+                        signs = {
+                            active = signs,
+                        },
+                        update_in_insert = true,
+                        underline = true,
+                        severity_sort = true,
+                        float = {
+                            focusable = false,
+                            style = "minimal",
+                            border = "rounded",
+                            source = "always",
+                            header = "",
+                            prefix = "",
+                        },
+                    }
+
+                    vim.diagnostic.config(config)
+                end
+            },
+            {
+                'simrat39/symbols-outline.nvim',
+                config = function()
+                    require("symbols-outline").setup({
+                    })
+                    local keymap = vim.api.nvim_set_keymap
+                    keymap("n", "<F3>", ":SymbolsOutline<CR>", { desc = "打开/关闭符号表" })
+                end
             }
-
-
-
-            local config = {
-                -- 诊断信息是否以virtual_text显示
-                virtual_text = false,
-                signs = {
-                    active = signs,
-                },
-                update_in_insert = true,
-                underline = true,
-                severity_sort = true,
-                float = {
-                    focusable = false,
-                    style = "minimal",
-                    border = "rounded",
-                    source = "always",
-                    header = "",
-                    prefix = "",
-                },
-            }
-
-            vim.diagnostic.config(config)
-        end
-    },
-    {
-        'simrat39/symbols-outline.nvim',
-        config = function()
-            require("symbols-outline").setup({
-            })
-            local keymap = vim.api.nvim_set_keymap
-            keymap("n", "<F3>", ":SymbolsOutline<CR>", { desc = "打开/关闭符号表" })
-        end
-    }
-}
+        }
