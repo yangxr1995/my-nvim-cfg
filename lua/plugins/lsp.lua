@@ -2,7 +2,7 @@ return {
     {
         "hrsh7th/nvim-cmp",
         event = { "InsertEnter", "CmdlineEnter" },
-        ft = { "bash", "c", "cpp", "json", "lua", "python" },
+        ft = { "sh", "c", "cpp", "json", "lua", "python", "cmake" },
         dependencies = {
             "hrsh7th/cmp-path",
             "hrsh7th/cmp-nvim-lsp",
@@ -81,9 +81,9 @@ return {
                 },
                 sources = cmp.config.sources {
                     { name = "codeium" },
+                    { name = 'luasnip' },
                     { name = 'nvim_lsp' },
                     { name = 'nvim_lua' },
-                    { name = 'luasnip' },
                     { name = 'path' },
                     { name = "buffer" },
                 },
@@ -172,7 +172,6 @@ return {
             { name = 'cmdline' }
         })
     })
-
     vim.fn.sign_define('DiagnosticSignError', { text = '🤣', texthl = 'DiagnosticSignError' })
     vim.fn.sign_define('DiagnosticSignWarn', { text = '🧐', texthl = 'DiagnosticSignWarn' })
     vim.fn.sign_define('DiagnosticSignInfo', { text = '🫠', texthl = 'DiagnosticSignInfo' })
@@ -181,7 +180,7 @@ end,
     },
     {
         "neovim/nvim-lspconfig",
-        ft = { "bash", "c", "cpp", "json", "lua", "python" },
+        ft = { "sh", "c", "cc", "cpp", "json", "lua", "python", "cmake" },
         dependencies = {
             "nvimdev/guard-collection",
             "williamboman/mason.nvim",
@@ -197,7 +196,11 @@ end,
         },
         config = function()
             local servers = {
-                bashls = {},
+                bashls = {
+                    bashIde = {
+                        enableSourceErrorDiagnostics = true,
+                    }
+                },
                 clangd = {},
                 jsonls = {},
                 lua_ls = {
@@ -218,6 +221,9 @@ end,
 
                 },
                 pyright = {},
+                cmake = {
+                    filetype = "cmake",
+                },
             }
             local on_attach = function(_, bufnr)
                 -- Enable completion triggered by <c-x><c-o>
@@ -297,8 +303,6 @@ end,
                         { name = "DiagnosticSignHint", text = "" },
                         { name = "DiagnosticSignInfo", text = "" },
                     }
-
-
 
                     local config = {
                         -- 诊断信息是否以virtual_text显示
