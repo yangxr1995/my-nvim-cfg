@@ -22,6 +22,8 @@ return {
 
             telescope.setup {
                 defaults = {
+                  layout_strategy = 'cursor',
+                  layout_config = { height = 0.90 , width = 0.98 },
 
                     prompt_prefix = " ",
                     selection_caret = " ",

@@ -64,7 +64,7 @@ return {
                             mode = "symbol",
                             maxwidth = 50,
                             ellipsis_char = '...',
-                            symbol_map = { Codeium = "", }
+                            symbol_map = { FittenCode = "", }
                         })(entry, vim_item)
 
                         local strings = vim.split(kind.kind, "%s", { trimempty = true })
@@ -80,6 +80,7 @@ return {
                     end,
                 },
                 sources = cmp.config.sources {
+                    { name = "fittencode" },
                     { name = "codeium" },
                     { name = 'luasnip' },
                     { name = 'nvim_lsp' },
