@@ -47,6 +47,7 @@ return {
     },
     {
         "HiPhish/rainbow-delimiters.nvim",
+        ft = { "sh", "c", "cpp", "json", "lua", "python", "cmake" },
         config = function()
             local rainbow_delimiters = require 'rainbow-delimiters'
             vim.g.rainbow_delimiters = {

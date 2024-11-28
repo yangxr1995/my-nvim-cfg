@@ -3,6 +3,11 @@ return {
         "Kurama622/llm.nvim",
         dependencies = { "nvim-lua/plenary.nvim", "MunifTanjim/nui.nvim" },
         cmd = { "LLMSesionToggle", "LLMSelectedTextHandler", "LLMAppHandler" },
+        keys = {
+            { "<leader>llc", mode = "n", "<cmd>LLMSessionToggle<cr>", desc = "llm聊天" },
+            { "<leader>llt", mode = "x", "<cmd>LLMSelectedTextHandler 英译汉<cr>", desc = "llm翻译" },
+            { "<leader>llt", mode = "n", "<cmd>LLMAppHandler Translate<cr>", desc = "llm翻译" },
+        },
         config = function()
             local tools = require("llm.common.tools")
             -- vim.api.nvim_set_hl(0, "Query", { fg = "#6aa84f", bg = "NONE" })
@@ -133,22 +138,23 @@ return {
                     },
                 })
             end,
-            keys = {
-                { "<leader>llc", mode = "n", "<cmd>LLMSessionToggle<cr>" },
-                -- { "<leader>ae", mode = "v", "<cmd>LLMSelectedTextHandler 请解释下面这段代码<cr>" },
-                { "<leader>llt", mode = "x", "<cmd>LLMSelectedTextHandler 英译汉<cr>" },
-                { "<leader>llt", mode = "n", "<cmd>LLMAppHandler Translate<cr>" },
-                -- { "<leader>t", mode = "x", "<cmd>LLMAppHandler TestCode<cr>" },
-                -- { "<leader>ao", mode = "x", "<cmd>LLMAppHandler OptimCompare<cr>" },
-                -- { "<leader>ao", mode = "x", "<cmd>LLMAppHandler OptimizeCode<cr>" },
-                -- { "<leader>au", mode = "n", "<cmd>LLMAppHandler UserInfo<cr>" },
-            },
+            -- keys = {
+            --     { "<leader>llc", mode = "n", "<cmd>LLMSessionToggle<cr>" },
+            --     -- { "<leader>ae", mode = "v", "<cmd>LLMSelectedTextHandler 请解释下面这段代码<cr>" },
+            --     { "<leader>llt", mode = "x", "<cmd>LLMSelectedTextHandler 英译汉<cr>" },
+            --     { "<leader>llt", mode = "n", "<cmd>LLMAppHandler Translate<cr>" },
+            --     -- { "<leader>t", mode = "x", "<cmd>LLMAppHandler TestCode<cr>" },
+            --     -- { "<leader>ao", mode = "x", "<cmd>LLMAppHandler OptimCompare<cr>" },
+            --     -- { "<leader>ao", mode = "x", "<cmd>LLMAppHandler OptimizeCode<cr>" },
+            --     -- { "<leader>au", mode = "n", "<cmd>LLMAppHandler UserInfo<cr>" },
+            -- },
         },
         {
             'luozhiya/fittencode.nvim',
+            event = "VeryLazy",
+            ft = {"c", "cc", "cpp", "lua", "sh"},
             config = function()
                 require('fittencode').setup({
-
                     completion_mode ='source',
                 })
                 vim.opt.updatetime = 200

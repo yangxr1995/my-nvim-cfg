@@ -7,6 +7,10 @@ return {
                 opt = true,
             }
         },
+        keys = {
+            { "<F2>", mode = "n", function () require("nvim-tree.api").tree.toggle() end, desc = "开启/关闭tree" }
+        },
+        lazy = true,
         config = function()
             local status_ok, tree = pcall(require, "nvim-tree")
             if not status_ok then
@@ -21,9 +25,9 @@ return {
             vim.opt.termguicolors = true
 
             -- 打开 command 快捷键映射
-            local opts = { noremap = true, silent = true }
-            local api = require "nvim-tree.api"
-            vim.keymap.set('n', '<F2>', api.tree.toggle, opts)
+            -- local opts = { noremap = true, silent = true }
+            -- local api = require "nvim-tree.api"
+            -- vim.keymap.set('n', '<F2>', api.tree.toggle, opts)
 
             local function my_on_attach(bufnr)
                 local api = require "nvim-tree.api"
@@ -176,14 +180,8 @@ return {
     },
     {
         "echasnovski/mini.files",
-        config = function()
-            minifiles_toggle = function(...)
-                if not MiniFiles.close() then MiniFiles.open(...) end
-            end
-
-            vim.keymap.set('n', '<F4>', '<cmd>lua minifiles_toggle()<CR>', {
-                desc = "Search on current file"
-            })
-        end
+        keys = {
+            { "<F4>", mode = "n", function () if not require("mini.files").close() then require("mini.files").open() end end, desc = "开启/关闭mini.files" },
+        },
     },
 }

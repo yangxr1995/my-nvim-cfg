@@ -6,7 +6,7 @@ return {
         init = function()
             vim.g.mkdp_filetypes = { "markdown" }
         end,
-        ft = { "markdown" },
+        ft = { "md" },
     },
 
     {
@@ -17,10 +17,12 @@ return {
         ---@module 'render-markdown'
         ---@type render.md.UserConfig
         opts = {},
+        ft = { "md" },
     },
     {
         "HakonHarnes/img-clip.nvim",
         event = "VeryLazy",
+        ft = { "md" },
         opts = {
             -- add options here
             -- or leave it empty to use the default settings

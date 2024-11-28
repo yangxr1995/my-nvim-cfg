@@ -152,6 +152,7 @@ return {
     },
     {
         'xiyaowong/transparent.nvim',
+        event = "VeryLazy",
         config = function()
             require("transparent").setup({
                 groups = { -- table: default groups
@@ -168,6 +169,7 @@ return {
     },
     {
         "folke/which-key.nvim",
+        event = "VeryLazy",
         config = function()
             vim.o.timeout = true
             vim.o.timeoutlen = 300
@@ -182,6 +184,13 @@ return {
     },
     {
         'rmagatti/goto-preview',
+        ft = {"c", "cpp", "h", "lua", "cc"},
+        keys = {
+            { "gpd", mode = "n", function() require("goto-preview").goto_preview_definition() end, desc = "预览定义" },
+            { "gpi", mode = "n", function() require("goto-preview").goto_preview_implementation() end, desc = "预览实现" },
+            -- { "gP", mode = "n", function() require("goto-preview").close_all_win() end, desc = "关闭预览" },
+            { "gpt", mode = "n", function() require("goto-preview").goto_preview_type_definition() end, desc = "预览类型定义" },
+        },
         config = function()
             local status_ok, goto_pre = pcall(require, "goto-preview")
             if not status_ok then
@@ -209,20 +218,6 @@ return {
                 bufhidden = "wipe",                                          -- the bufhidden option to set on the floating window. See :h bufhidden
                 stack_floating_preview_windows = true,                       -- Whether to nest floating windows
                 preview_window_title = { enable = true, position = "left" }, -- Whether to set the preview window title as the filename
-
-
-                vim.keymap.set('n', 'gpd', '<cmd>lua require("goto-preview").goto_preview_definition()<CR>', {
-                    desc = "preview lsp defintion"
-                }),
-                vim.keymap.set('n', 'gpi', '<cmd>lua require("goto-preview").goto_preview_implementation()<CR>', {
-                    desc = "preview lsp defintion"
-                }),
-                vim.keymap.set('n', 'gP', '<cmd>lua require("goto-preview").close_all_win()<CR>', {
-                    desc = "preview lsp defintion"
-                }),
-                vim.keymap.set('n', 'gpt', '<cmd>lua require("goto-preview").goto_preview_type_definition()<CR>', {
-                    desc = "preview lsp type defintion"
-                }),
             }
         end
     },

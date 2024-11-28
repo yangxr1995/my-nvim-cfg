@@ -6,7 +6,6 @@ return {
             'rcarriga/nvim-dap-ui',
             'nvim-telescope/telescope-dap.nvim',
         },
-
         keys = {
             { "<leader>d", "", desc = "+debug", mode = { "n", "v" } },
             { '<F5>', function() require 'telescope'.extensions.dap.configurations {} end, { desc = "开始调试" } },

@@ -329,11 +329,14 @@ end,
             },
             {
                 'simrat39/symbols-outline.nvim',
+                keys = {
+                    { "<F3>", mode = "n", "<cmd>SymbolsOutline<CR>", desc = "打开/关闭符号表" }
+                },
                 config = function()
                     require("symbols-outline").setup({
                     })
-                    local keymap = vim.api.nvim_set_keymap
-                    keymap("n", "<F3>", ":SymbolsOutline<CR>", { desc = "打开/关闭符号表" })
+                    -- local keymap = vim.api.nvim_set_keymap
+                    -- keymap("n", "<F3>", ":SymbolsOutline<CR>", { desc = "打开/关闭符号表" })
                 end
             }
         }

@@ -1,3 +1,4 @@
+
 return {
     {
         'nvim-telescope/telescope.nvim',
@@ -9,16 +10,19 @@ return {
             'nvim-telescope/telescope-symbols.nvim',
             { 'nvim-telescope/telescope-fzf-native.nvim', build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release' }
         },
-        config = function()
-            local builtin = require('telescope.builtin')
-            vim.keymap.set('n', 'rr', builtin.live_grep, {})
-            vim.keymap.set('n', 'rf', builtin.find_files, {})
-            vim.keymap.set('n', 'rs', builtin.lsp_dynamic_workspace_symbols, {})
+        keys = {
+            { 'rr', function() require('telescope.builtin').live_grep() end ,  desc = "live grep"  },
+            { 'rf', function() require('telescope.builtin').find_files() end ,  desc = "find files"  },
+            { 'rs', function() require('telescope.builtin').lsp_dynamic_workspace_symbols() end ,  desc = "find lsp symbols"  },
+        },
+        lazy = true,
 
+        config = function()
             local telescope = require("telescope")
             local actions = require("telescope.actions")
 
             telescope.load_extension('media_files')
+            telescope.setup {}
 
             telescope.setup {
                 defaults = {
@@ -120,6 +124,11 @@ return {
         dependencies = {
             'nvim-telescope/telescope.nvim',
         },
+        keys = {
+            { "<leader>gd", mode = "n", function () require("telescope-gtags").showDefinition() end, desc = "gtags查找定义" },
+            { "<leader>gr", mode = "n", function () require("telescope-gtags").showReference() end, desc = "gtags查找引用" }
+        },
+        lazy = true,
         config = function()
             local status_ok, gtags = pcall(require, "telescope-gtags")
             if not status_ok then
@@ -127,26 +136,18 @@ return {
                 return
             end
 
-            local opts = { noremap = true, silent = true }
-
-            vim.keymap.set('n', '<leader>gd', gtags.showDefinition, opts)
-            vim.keymap.set('n', '<leader>gr', gtags.showReference, opts)
+            -- local opts = { noremap = true, silent = true }
+            -- vim.keymap.set('n', '<leader>gd', gtags.showDefinition, opts)
+            -- vim.keymap.set('n', '<leader>gr', gtags.showReference, opts)
             gtags.setAutoIncUpdate(true)
         end
 
     },
     {
         'folke/todo-comments.nvim',
-        config = function()
-            local status_ok, todo = pcall(require, "todo-comments")
-            if not status_ok then
-                print("todo not exist")
-                return
-            end
-
-
-            todo.setup(
-                {
+        ft = {"c", "cpp", "h", "sh", "lua"},
+        -- event = "InsertEnter",
+        opts = {
                     signs = true, -- show icons in the signs column
                     sign_priority = 8, -- sign priority
                     -- keywords recognized as todo comments
@@ -209,9 +210,6 @@ return {
                         pattern = [[\b(KEYWORDS):]], -- ripgrep regex
                         -- pattern = [[\b(KEYWORDS)\b]], -- match without the extra colon. You'll likely get false positives
                     },
-                }
-
-            )
-        end
+        },
     }
 }
