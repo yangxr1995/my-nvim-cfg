@@ -145,8 +145,8 @@ return {
     },
     {
         'folke/todo-comments.nvim',
-        ft = {"c", "cpp", "h", "sh", "lua"},
-        -- event = "InsertEnter",
+        -- ft = {"c", "cpp", "h", "sh", "lua"},
+        event = "VeryLazy",
         opts = {
                     signs = true, -- show icons in the signs column
                     sign_priority = 8, -- sign priority

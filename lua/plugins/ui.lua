@@ -125,6 +125,7 @@ return {
     },
     {
         'lunarvim/darkplus.nvim',
+        -- event = {"VeryLazy"},
         config = function()
             vim.cmd.colorscheme('darkplus')
         end
@@ -184,7 +185,6 @@ return {
     },
     {
         'rmagatti/goto-preview',
-        ft = {"c", "cpp", "h", "lua", "cc"},
         keys = {
             { "gpd", mode = "n", function() require("goto-preview").goto_preview_definition() end, desc = "预览定义" },
             { "gpi", mode = "n", function() require("goto-preview").goto_preview_implementation() end, desc = "预览实现" },

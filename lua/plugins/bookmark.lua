@@ -6,6 +6,7 @@ return {
             -- or if using `mini.icons`
             -- { "echasnovski/mini.icons" },
         },
+        event = {"VeryLazy"},
         opts = {
             show_icons = true,
             buffer_leader_key = 'm', -- Per Buffer Mappings

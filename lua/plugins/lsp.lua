@@ -2,7 +2,7 @@ return {
     {
         "hrsh7th/nvim-cmp",
         event = { "InsertEnter", "CmdlineEnter" },
-        ft = { "sh", "c", "cpp", "json", "lua", "python", "cmake" },
+        -- ft = { "sh", "c", "cpp", "json", "lua", "python", "cmake" },
         dependencies = {
             "hrsh7th/cmp-path",
             "hrsh7th/cmp-nvim-lsp",

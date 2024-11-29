@@ -151,8 +151,8 @@ return {
         },
         {
             'luozhiya/fittencode.nvim',
+            lazy= true,
             event = "VeryLazy",
-            ft = {"c", "cc", "cpp", "lua", "sh"},
             config = function()
                 require('fittencode').setup({
                     completion_mode ='source',

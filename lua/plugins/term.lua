@@ -1,6 +1,10 @@
 return {
     {
         'akinsho/toggleterm.nvim',
+        -- event = {"VeryLazy"},
+        keys = {
+            { "<C-\\>", mode = "n", "<cmd>ToggleTerm<CR>", desc = "gtags查找引用" }
+        },
         config = function()
             local status_ok, toggleterm = pcall(require, "toggleterm")
             if not status_ok then
