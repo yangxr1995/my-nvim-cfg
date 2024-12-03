@@ -183,17 +183,12 @@ end,
         "neovim/nvim-lspconfig",
         ft = { "sh", "c", "cc", "cpp", "json", "lua", "python", "cmake" },
         dependencies = {
-            "nvimdev/guard-collection",
             "williamboman/mason.nvim",
             "williamboman/mason-lspconfig.nvim",
-            -- { "nvimdev/guard.nvim", ft = { "bash", "c", "cpp", "json", "lua", "python" } },
             "folke/neoconf.nvim",
-            "folke/neodev.nvim",
-            {
-                "j-hui/fidget.nvim",
-                tag = "legacy",
-            },
+            "j-hui/fidget.nvim",
             "nvimdev/lspsaga.nvim",
+            "folke/neodev.nvim",
         },
         config = function()
             local servers = {
@@ -236,14 +231,6 @@ end,
                     vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
                 end
 
-                --format
-                -- local ft = require('guard.filetype')
-                -- ft('c'):fmt('clang-format')
-                -- ft('cpp'):fmt('clang-format')
-                -- ft('lua'):fmt('stylua'):append('lsp')
-                -- ft('python'):fmt('black')
-                -- ft('sh'):fmt('lsp')
-
                 nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
                 nmap('gd', require "telescope.builtin".lsp_definitions, '[G]oto [D]efinition')
                 nmap('K', "<cmd>Lspsaga hover_doc<CR>", 'Hover Documentation')
@@ -279,10 +266,6 @@ end,
                         }
                     }
                 })
-                -- require("guard").setup({
-                    --     lsp_as_default_formatter = true,
-                    --     vim.keymap.set({ "n", "v" }, "\\f", "<cmd>GuardFmt<CR>", { noremap = true })
-                    -- })
                     require("mason").setup()
                     local capabilities = require('cmp_nvim_lsp').default_capabilities()
                     require("mason-lspconfig").setup({
@@ -335,8 +318,6 @@ end,
                 config = function()
                     require("symbols-outline").setup({
                     })
-                    -- local keymap = vim.api.nvim_set_keymap
-                    -- keymap("n", "<F3>", ":SymbolsOutline<CR>", { desc = "打开/关闭符号表" })
                 end
             }
         }
