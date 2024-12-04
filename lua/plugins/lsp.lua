@@ -88,6 +88,7 @@ return {
                     { name = 'path' },
                     { name = "buffer" },
                 },
+
                 mapping = cmp.mapping.preset.insert {
 
                     ["<C-e>"] = cmp.mapping {

@@ -73,7 +73,7 @@ return {
     },
     {
         'nvim-treesitter/nvim-treesitter-context',
-        ft = {"c", "cc", "cpp", "h", "lua", "cmake", "json", "xml", "md"},
+        ft = {"c", "cc", "cpp", "h", "lua", "cmake", "json", "xml", "markdown"},
         config = function()
             local context = require("treesitter-context")
             context.setup({
