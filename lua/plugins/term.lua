@@ -3,7 +3,10 @@ return {
         'akinsho/toggleterm.nvim',
         -- event = {"VeryLazy"},
         keys = {
-            { "<C-\\>", mode = "n", "<cmd>ToggleTerm<CR>", desc = "gtags查找引用" }
+            { "<C-\\>", mode = "n", "<cmd>ToggleTerm<CR>", desc = "打开/关闭终端" },
+            { "<leader>tf", mode = "n", "<cmd>ToggleTerm direction=float<CR>", desc = "打开终端(浮动窗口)" },
+            { "<leader>th", mode = "n", "<cmd>ToggleTerm direction=horizontal size=8<CR>", desc = "打开终端(水平)" },
+            { "<leader>tv", mode = "n", "<cmd>ToggleTerm direction=vertical size=30<CR>", desc = "打开终端(垂直)" },
         },
         config = function()
             local status_ok, toggleterm = pcall(require, "toggleterm")

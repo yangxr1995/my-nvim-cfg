@@ -66,7 +66,7 @@ return {
                     cwd = '${workspaceFolder}'
                 },
                 {
-                    name = 'Attach to gdbserver :1234 (x86)',
+                    name = 'Attach to localhost :1234 (x86)',
                     type = 'cppdbg',
                     request = 'launch',
                     MIMode = 'gdb',
