@@ -6,7 +6,7 @@ return {
         keys = {
             { "<leader>llc", mode = "n", "<cmd>LLMSessionToggle<cr>", desc = "llm聊天" },
             { "<leader>llt", mode = "x", "<cmd>LLMSelectedTextHandler 英译汉<cr>", desc = "llm翻译" },
-            { "<leader>llt", mode = "n", "<cmd>LLMAppHandler Translate<cr>", desc = "llm翻译" },
+            { "<leader>llr", mode = "n", "<cmd>LLMAppHandler Translate<cr>", desc = "llm翻译" },
         },
         config = function()
             local tools = require("llm.common.tools")
@@ -21,6 +21,11 @@ return {
                 model = "glm-4-flash",
                 -- model = "glm-4-plus",
                 max_tokens = 8000,
+                --
+                -- [[deepseek]]
+                -- url = "https://api.deepseek.com/v1",
+                -- model = "deepseek-chat",
+
 
                 -- [[ kimi ]]
                 -- url = "https://api.moonshot.cn/v1/chat/completions",
@@ -139,26 +144,26 @@ return {
                 })
             end,
             -- keys = {
-            --     { "<leader>llc", mode = "n", "<cmd>LLMSessionToggle<cr>" },
-            --     -- { "<leader>ae", mode = "v", "<cmd>LLMSelectedTextHandler 请解释下面这段代码<cr>" },
-            --     { "<leader>llt", mode = "x", "<cmd>LLMSelectedTextHandler 英译汉<cr>" },
-            --     { "<leader>llt", mode = "n", "<cmd>LLMAppHandler Translate<cr>" },
-            --     -- { "<leader>t", mode = "x", "<cmd>LLMAppHandler TestCode<cr>" },
-            --     -- { "<leader>ao", mode = "x", "<cmd>LLMAppHandler OptimCompare<cr>" },
-            --     -- { "<leader>ao", mode = "x", "<cmd>LLMAppHandler OptimizeCode<cr>" },
-            --     -- { "<leader>au", mode = "n", "<cmd>LLMAppHandler UserInfo<cr>" },
-            -- },
-        },
-        {
-            'luozhiya/fittencode.nvim',
-            lazy= true,
-            event = "VeryLazy",
-            config = function()
-                require('fittencode').setup({
-                    completion_mode ='source',
-                })
-                vim.opt.updatetime = 200
-            end,
+                --     { "<leader>llc", mode = "n", "<cmd>LLMSessionToggle<cr>" },
+                --     -- { "<leader>ae", mode = "v", "<cmd>LLMSelectedTextHandler 请解释下面这段代码<cr>" },
+                --     { "<leader>llt", mode = "x", "<cmd>LLMSelectedTextHandler 英译汉<cr>" },
+                --     { "<leader>llt", mode = "n", "<cmd>LLMAppHandler Translate<cr>" },
+                --     -- { "<leader>t", mode = "x", "<cmd>LLMAppHandler TestCode<cr>" },
+                --     -- { "<leader>ao", mode = "x", "<cmd>LLMAppHandler OptimCompare<cr>" },
+                --     -- { "<leader>ao", mode = "x", "<cmd>LLMAppHandler OptimizeCode<cr>" },
+                --     -- { "<leader>au", mode = "n", "<cmd>LLMAppHandler UserInfo<cr>" },
+                -- },
+            },
+            {
+                'luozhiya/fittencode.nvim',
+                lazy= true,
+                event = "VeryLazy",
+                config = function()
+                    require('fittencode').setup({
+                        completion_mode ='source',
+                    })
+                    vim.opt.updatetime = 200
+                end,
 
+            },
         }
-    }

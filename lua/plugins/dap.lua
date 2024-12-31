@@ -78,12 +78,12 @@ return {
                     end,
                 },
                 {
-                    name = 'attach to 192.168.89.79:1234 (ARM)',
+                    name = 'attach to 192.168.33.1:1234 (ARM)',
                     type = 'cppdbg',
                     request = 'launch',
                     MIMode = 'gdb',
-                    miDebuggerServerAddress = '192.168.89.79:1234',
-                    miDebuggerPath = '/usr/local/gdb-arm/bin/arm-linux-gdb',
+                    miDebuggerServerAddress = '192.168.33.1:1234',
+                    miDebuggerPath = '/usr/local/gdb-x86/bin/gdb',
                     miDebuggerArgs = '--eval-command "set solib-sear ./" --eval-command "set sysroot ./"',
                     cwd = '${workspaceFolder}',
                     program = function()
