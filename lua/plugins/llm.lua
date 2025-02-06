@@ -1,3 +1,29 @@
+local function local_llm_streaming_handler(chunk, line, assistant_output, bufnr, winid, F)
+    if not chunk then
+        return assistant_output
+    end
+    local tail = chunk:sub(-1, -1)
+    if tail:sub(1, 1) ~= "}" then
+        line = line .. chunk
+    else
+        line = line .. chunk
+        local status, data = pcall(vim.fn.json_decode, line)
+        if not status or not data.message.content then
+            return assistant_output
+        end
+        assistant_output = assistant_output .. data.message.content
+        F.WriteContent(bufnr, winid, data.message.content)
+        line = ""
+    end
+    return assistant_output
+end
+
+local function local_llm_parse_handler(chunk)
+    local assistant_output = chunk.message.content
+    return assistant_output
+end
+
+
 return {
     {
         "Kurama622/llm.nvim",
@@ -5,7 +31,8 @@ return {
         cmd = { "LLMSesionToggle", "LLMSelectedTextHandler", "LLMAppHandler" },
         keys = {
             { "<leader>llc", mode = "n", "<cmd>LLMSessionToggle<cr>", desc = "llm聊天" },
-            { "<leader>llt", mode = "x", "<cmd>LLMSelectedTextHandler 英译汉<cr>", desc = "llm翻译" },
+            { "<leader>lltc", mode = "x", "<cmd>LLMSelectedTextHandler 翻译为中文<cr>", desc = "英译汉" },
+            { "<leader>llte", mode = "x", "<cmd>LLMSelectedTextHandler 翻译为英文<cr>", desc = "汉译英" },
             { "<leader>llr", mode = "n", "<cmd>LLMAppHandler Translate<cr>", desc = "llm翻译" },
         },
         config = function()
@@ -13,51 +40,27 @@ return {
             -- vim.api.nvim_set_hl(0, "Query", { fg = "#6aa84f", bg = "NONE" })
             require("llm").setup({
 
-                -- [[ cloudflared ]]     params: api_type =  "workers.ai" | "openai" | "zhipu"
-                -- model = "@cf/qwen/qwen1.5-14b-chat-awq",
-
                 -- [[ GLM ]]
-                url = "https://open.bigmodel.cn/api/paas/v4/chat/completions",
-                model = "glm-4-flash",
+                -- url = "https://open.bigmodel.cn/api/paas/v4/chat/completions",
+                -- model = "glm-4-flash",
                 -- model = "glm-4-plus",
-                max_tokens = 8000,
-                --
+                -- max_tokens = 8000,
+
                 -- [[deepseek]]
                 -- url = "https://api.deepseek.com/v1",
                 -- model = "deepseek-chat",
 
-
-                -- [[ kimi ]]
-                -- url = "https://api.moonshot.cn/v1/chat/completions",
-                -- model = "moonshot-v1-8k", -- "moonshot-v1-8k", "moonshot-v1-32k", "moonshot-v1-128k"
-                -- api_type = "openai",
-                -- streaming_handler = kimi_handler,
-                -- max_tokens = 4096,
-
-                -- [[ Github Models ]]
-                -- url = "https://models.inference.ai.azure.com/chat/completions",
-                -- -- model = "gpt-4o",
-                -- api_type = "openai",
-                -- max_tokens = 4096,
-                -- model = "gpt-4o-mini",
-
-                -- [[ siliconflow ]]
-                -- url = "https://api.siliconflow.cn/v1/chat/completions",
-                -- model = "THUDM/glm-4-9b-chat",
-                -- api_type = "openai",
-                -- max_tokens = 4096,
-                -- model = "Vendor-A/Qwen/Qwen2-72B-Instruct",
-                -- model = "01-ai/Yi-1.5-9B-Chat-16K",
-                -- model = "google/gemma-2-9b-it",
-                -- model = "meta-llama/Meta-Llama-3.1-8B-Instruct",
-                -- model = "Qwen/Qwen2.5-7B-Instruct",
-                -- model = "Qwen/Qwen2.5-Coder-7B-Instruct",
-                -- model = "internlm/internlm2_5-7b-chat",
+                -- [[ollama]]
+                api_type = "ollama",
+                url = "http://192.168.33.1:11434/api/chat", -- your url
+                -- model = "deepseek-r1:1.5b",
+                -- model = "qwen2.5:1.5b",
+                model = "modelscope.cn/Qwen/Qwen2.5-3B-Instruct-GGUF:latest",
 
                 temperature = 0.3,
                 top_p = 0.7,
 
-                prompt = "You are a helpful chinese assistant.",
+                prompt = "你是中英文翻译助手.",
 
                 prefix = {
                     user = { text = "😃 ", hl = "Title" }, ------------ 
@@ -71,18 +74,18 @@ return {
                 -- stylua: ignore
                 -- popup window options
                 popwin_opts = {
-                    relative = "cursor", enter = true,
-                    focusable = true, zindex = 50,
-                    position = { row = -7, col = 15, },
-                    size = { height = 15, width = "50%", },
-                    border = { style = "single",
-                    text = { top = " Explain ", top_align = "center" },
+                        relative = "cursor", enter = true,
+                        focusable = true, zindex = 50,
+                        position = { row = -7, col = 15, },
+                        size = { height = 15, width = "50%", },
+                        border = { style = "single",
+                        text = { top = " Explain ", top_align = "center" },
+                    },
+                    win_options = {
+                        winblend = 0,
+                        winhighlight = "Normal:Normal,FloatBorder:FloatBorder",
+                    },
                 },
-                win_options = {
-                    winblend = 0,
-                    winhighlight = "Normal:Normal,FloatBorder:FloatBorder",
-                },
-            },
 
             -- stylua: ignore
             keys = {
@@ -105,65 +108,34 @@ return {
                 ["Session:Close"]     = { mode = "n", key = {"<esc>", "Q"} },
             },
 
+            streaming_handler = local_llm_streaming_handler,
             app_handler = {
-                OptimizeCode = {
-                    handler = tools.side_by_side_handler,
-                },
-                TestCode = {
-                    handler = tools.side_by_side_handler,
-                    prompt = [[ Write some test cases for the following code, only return the test cases.
-                    Give the code content directly, do not use code blocks or other tags to wrap it. ]],
-                    opts = {
-                        right = {
-                            title = " Test Cases ",
-                        },
-                    },
-                },
-                OptimCompare = {
-                    handler = tools.action_handler,
-                },
-                Translate = {
+                 Translate = {
+                    prompt = [[以下内容若为中文则翻译为英文，若为英文则翻译为中文]],
                     handler = tools.qa_handler,
-                },
-
-                -- check siliconflow's balance
-                -- UserInfo = {
-                    --   handler = function()
-                        --     local key = os.getenv("LLM_KEY")
-                        --     local res = tools.curl_request_handler(
-                        --       "https://api.siliconflow.cn/v1/user/info",
-                        --       { "GET", "-H", string.format("'Authorization: Bearer %s'", key) }
-                        --     )
-                        --     if res ~= nil then
-                        --       print("balance: " .. res.data.balance)
-                        --     end
-                        --   end,
-                        -- },
-
+                    opts = {
+                        parse_handler = local_llm_parse_handler,
+                        exit_on_move = true,
+                        enter_flexible_window = false,
                     },
-                })
-            end,
-            -- keys = {
-                --     { "<leader>llc", mode = "n", "<cmd>LLMSessionToggle<cr>" },
-                --     -- { "<leader>ae", mode = "v", "<cmd>LLMSelectedTextHandler 请解释下面这段代码<cr>" },
-                --     { "<leader>llt", mode = "x", "<cmd>LLMSelectedTextHandler 英译汉<cr>" },
-                --     { "<leader>llt", mode = "n", "<cmd>LLMAppHandler Translate<cr>" },
-                --     -- { "<leader>t", mode = "x", "<cmd>LLMAppHandler TestCode<cr>" },
-                --     -- { "<leader>ao", mode = "x", "<cmd>LLMAppHandler OptimCompare<cr>" },
-                --     -- { "<leader>ao", mode = "x", "<cmd>LLMAppHandler OptimizeCode<cr>" },
-                --     -- { "<leader>au", mode = "n", "<cmd>LLMAppHandler UserInfo<cr>" },
-                -- },
-            },
-            {
-                'luozhiya/fittencode.nvim',
-                lazy= true,
-                event = "VeryLazy",
-                config = function()
-                    require('fittencode').setup({
-                        completion_mode ='source',
-                    })
-                    vim.opt.updatetime = 200
-                end,
 
+                },
             },
-        }
+
+        })
+    end,
+
+},
+{
+    'luozhiya/fittencode.nvim',
+    lazy= true,
+    event = "VeryLazy",
+    config = function()
+        require('fittencode').setup({
+            completion_mode ='source',
+        })
+        vim.opt.updatetime = 200
+    end,
+
+},
+                        }

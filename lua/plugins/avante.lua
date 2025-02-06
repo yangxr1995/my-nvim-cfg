@@ -11,8 +11,11 @@ return {
                 -- endpoint = "https://open.bigmodel.cn/api/paas/v4/",
                 -- model = "glm-4-flash",
 
-                endpoint = "https://api.deepseek.com/v1",
-                model = "deepseek-chat",
+                -- endpoint = "https://api.deepseek.com/v1",
+                -- model = "deepseek-chat",
+
+                endpoint = "https://dashscope.aliyuncs.com/compatible-mode/v1",
+                model = "qwen-plus",
 
                 timeout = 30000, -- Timeout in milliseconds
                 temperature = 0,
