@@ -27,35 +27,24 @@ end
 return {
     {
         "Kurama622/llm.nvim",
+        commit = "f2bf6540bd32bf5a1b465dbd433238a32d817e96",
         dependencies = { "nvim-lua/plenary.nvim", "MunifTanjim/nui.nvim" },
         cmd = { "LLMSesionToggle", "LLMSelectedTextHandler", "LLMAppHandler" },
         keys = {
-            { "<leader>llc", mode = "n", "<cmd>LLMSessionToggle<cr>", desc = "llm聊天" },
             { "<leader>lltc", mode = "x", "<cmd>LLMSelectedTextHandler 翻译为中文<cr>", desc = "英译汉" },
             { "<leader>llte", mode = "x", "<cmd>LLMSelectedTextHandler 翻译为英文<cr>", desc = "汉译英" },
             { "<leader>llr", mode = "n", "<cmd>LLMAppHandler Translate<cr>", desc = "llm翻译" },
         },
         config = function()
             local tools = require("llm.common.tools")
-            -- vim.api.nvim_set_hl(0, "Query", { fg = "#6aa84f", bg = "NONE" })
             require("llm").setup({
-
-                -- [[ GLM ]]
-                -- url = "https://open.bigmodel.cn/api/paas/v4/chat/completions",
-                -- model = "glm-4-flash",
-                -- model = "glm-4-plus",
-                -- max_tokens = 8000,
-
-                -- [[deepseek]]
-                -- url = "https://api.deepseek.com/v1",
-                -- model = "deepseek-chat",
 
                 -- [[ollama]]
                 api_type = "ollama",
                 url = "http://192.168.33.1:11434/api/chat", -- your url
                 -- model = "deepseek-r1:1.5b",
-                -- model = "qwen2.5:1.5b",
-                model = "modelscope.cn/Qwen/Qwen2.5-3B-Instruct-GGUF:latest",
+                model = "qwen2.5:1.5b",
+                -- model = "modelscope.cn/Qwen/Qwen2.5-3B-Instruct-GGUF:latest",
 
                 temperature = 0.3,
                 top_p = 0.7,
@@ -74,18 +63,18 @@ return {
                 -- stylua: ignore
                 -- popup window options
                 popwin_opts = {
-                        relative = "cursor", enter = true,
-                        focusable = true, zindex = 50,
-                        position = { row = -7, col = 15, },
-                        size = { height = 15, width = "50%", },
-                        border = { style = "single",
-                        text = { top = " Explain ", top_align = "center" },
-                    },
-                    win_options = {
-                        winblend = 0,
-                        winhighlight = "Normal:Normal,FloatBorder:FloatBorder",
-                    },
+                    relative = "cursor", enter = true,
+                    focusable = true, zindex = 50,
+                    position = { row = -7, col = 15, },
+                    size = { height = 15, width = "50%", },
+                    border = { style = "single",
+                    text = { top = " Explain ", top_align = "center" },
                 },
+                win_options = {
+                    winblend = 0,
+                    winhighlight = "Normal:Normal,FloatBorder:FloatBorder",
+                },
+            },
 
             -- stylua: ignore
             keys = {
@@ -110,7 +99,7 @@ return {
 
             streaming_handler = local_llm_streaming_handler,
             app_handler = {
-                 Translate = {
+                Translate = {
                     prompt = [[以下内容若为中文则翻译为英文，若为英文则翻译为中文]],
                     handler = tools.qa_handler,
                     opts = {
@@ -123,19 +112,18 @@ return {
             },
 
         })
-    end,
+        end,
+    },
+    {
+        'luozhiya/fittencode.nvim',
+        lazy= true,
+        event = "VeryLazy",
+        config = function()
+            require('fittencode').setup({
+                completion_mode ='source',
+            })
+            vim.opt.updatetime = 200
+        end,
 
-},
-{
-    'luozhiya/fittencode.nvim',
-    lazy= true,
-    event = "VeryLazy",
-    config = function()
-        require('fittencode').setup({
-            completion_mode ='source',
-        })
-        vim.opt.updatetime = 200
-    end,
-
-},
-                        }
+    },
+}
