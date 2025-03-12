@@ -120,13 +120,15 @@ return {
     },
     {
 
-        "ivechan/telescope-gtags",
+        "yangxr1995/telescope-gtags",
         dependencies = {
             'nvim-telescope/telescope.nvim',
         },
         keys = {
             { "<leader>gd", mode = "n", function () require("telescope-gtags").showDefinition() end, desc = "gtags查找定义" },
-            { "<leader>gr", mode = "n", function () require("telescope-gtags").showReference() end, desc = "gtags查找引用" }
+            { "<leader>gr", mode = "n", function () require("telescope-gtags").showReference() end, desc = "gtags查找引用" },
+            { "<leader>gir", mode = "n", function () require("telescope-gtags").showReferenceFromInput() end, desc = "gtags查找引用" },
+            { "<leader>gid", mode = "n", function () require("telescope-gtags").showDefinitionFromInput() end, desc = "gtags查找定义" },
         },
         lazy = true,
         config = function()
