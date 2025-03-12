@@ -46,24 +46,50 @@ return {
                     type = "cppdbg",
                     request = "launch",
                     program = function()
+                        -- 带路径提示的可执行文件选择
                         return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
                     end,
-                    args = {},
+                    args = function()
+                        -- 新增交互式参数输入
+                        local input_args = vim.fn.input('Program arguments (space separated): ')
+                        return vim.split(input_args, ' ')  -- 将输入字符串转为数组
+                    end,
                     cwd = "${workspaceFolder}",
                     stopAtEntry = true,
+                    -- 新增环境变量配置（可选）
+                    environment = function()
+                        local env_input = vim.fn.input('Environment variables (KEY=VAL; comma separated): ')
+                        if env_input ~= '' then
+                            return vim.split(env_input, ';%s*')
+                        end
+                    end,
+                    setupCommands = {
+                        {
+                            text = '-enable-pretty-printing',
+                            description = 'Enable GDB pretty printing',
+                            ignoreFailures = true
+                        }
+                    }
                 },
                 {
                     name = "Select and attach to process",
-                    type = "cppgdb",
+                    type = "cppdbg",
                     request = "attach",
                     program = function()
                         return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
                     end,
-                    pid = function()
+                    processId = function()
                         local name = vim.fn.input('Executable name (filter): ')
                         return require("dap.utils").pick_process({ filter = name })
                     end,
-                    cwd = '${workspaceFolder}'
+                    cwd = '${workspaceFolder}',
+                    setupCommands = {
+                        {
+                            text = '-enable-pretty-printing',
+                            description = 'Enable GDB pretty printing',
+                            ignoreFailures = true
+                        }
+                    }
                 },
                 {
                     name = 'Attach to localhost :1234 (x86)',
