@@ -44,7 +44,10 @@ local function text_to_speech()
     -- 将多行文本合并为一行
     local text = table.concat(lines, " ")
     text = string.gsub(text, "%s+", " ") -- 去除多余的空格
-    text = string.gsub(text, "_", " ") -- 将下划线替换为空格
+    text = string.gsub(text, "_", " ")
+    text = string.gsub(text, "//", " ")
+
+    -- print("Selected text: ", text)
 
     -- 生成固定路径的 MP3 文件
     local cache_dir = vim.fn.stdpath("cache") .. "/tts"
