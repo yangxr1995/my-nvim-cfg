@@ -44,19 +44,23 @@ local function text_to_speech()
     -- 将多行文本合并为一行
     local text = table.concat(lines, " ")
     text = string.gsub(text, "%s+", " ") -- 去除多余的空格
+    text = string.gsub(text, "_", " ") -- 将下划线替换为空格
 
     -- 生成固定路径的 MP3 文件
     local cache_dir = vim.fn.stdpath("cache") .. "/tts"
     vim.fn.mkdir(cache_dir, "p")
     local audio_file = cache_dir .. "/last_audio.mp3"
 
+    local voice = "zh-TW-HsiaoChenNeural"
+
     print("audio_file : ", audio_file);
     -- 使用 edge-tts 将文本转换为 MP3，并调整速度
     local cmd = string.format(
-        'edge-tts --text "%s" --write-media %s --rate=%s',
+        'edge-tts --text "%s" --write-media %s --rate=%s --voice=%s',
         text,
         audio_file,
-        config.rate
+        config.rate,
+        voice
     )
 
     -- 异步执行 edge-tts 命令
