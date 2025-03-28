@@ -46,6 +46,9 @@ local function text_to_speech()
     text = string.gsub(text, "%s+", " ") -- 去除多余的空格
     text = string.gsub(text, "_", " ")
     text = string.gsub(text, "//", " ")
+    text = string.gsub(text, "*", " ")
+    text = string.gsub(text, "`", " ")
+    text = string.gsub(text, "#", " ")
 
     -- print("Selected text: ", text)
 
@@ -56,7 +59,7 @@ local function text_to_speech()
 
     local voice = "zh-TW-HsiaoChenNeural"
 
-    print("audio_file : ", audio_file);
+    -- print("audio_file : ", audio_file);
     -- 使用 edge-tts 将文本转换为 MP3，并调整速度
     local cmd = string.format(
         'edge-tts --text "%s" --write-media %s --rate=%s --voice=%s',
