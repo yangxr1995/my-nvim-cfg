@@ -41,9 +41,9 @@ return {
 
                 -- [[ollama]]
                 api_type = "ollama",
-                url = "http://192.168.33.1:11434/api/chat", -- your url
+                url = "http://192.168.3.1:11434/api/chat", -- your url
                 -- model = "deepseek-r1:1.5b",
-                model = "qwen2.5:1.5b",
+                model = "qwen2.5:3b",
                 -- model = "modelscope.cn/Qwen/Qwen2.5-3B-Instruct-GGUF:latest",
 
                 temperature = 0.3,

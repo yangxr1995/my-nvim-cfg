@@ -131,7 +131,6 @@ return {
         end
     },
     {
-
         "yaocccc/nvim-hlchunk",
     },
     {

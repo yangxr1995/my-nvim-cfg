@@ -14,8 +14,12 @@ return {
                 -- endpoint = "https://api.deepseek.com/v1",
                 -- model = "deepseek-chat",
 
-                endpoint = "https://dashscope.aliyuncs.com/compatible-mode/v1",
-                model = "qwen-plus",
+                endpoint="http://api.siliconflow.cn/v1",
+                model = "Pro/deepseek-ai/DeepSeek-V3",
+                -- model = "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+
+                -- endpoint = "https://dashscope.aliyuncs.com/compatible-mode/v1",
+                -- model = "qwen-plus",
 
                 timeout = 30000, -- Timeout in milliseconds
                 temperature = 0,
@@ -23,6 +27,7 @@ return {
                 stream = true,
                 -- ["local"] = false,
             },
+            hints = { enabled = false },
         },
         -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
         build = "make",

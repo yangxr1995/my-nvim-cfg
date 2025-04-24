@@ -155,30 +155,36 @@ return {
 
         },
 
-        experimental = {
-            ghost_text = true,
-        },
-    }
-
-    cmp.setup.cmdline('/', {
-        mapping = cmp.mapping.preset.cmdline(),
-        sources = {
-            { name = 'buffer' },
+            experimental = {
+                ghost_text = true,
+            },
         }
-    })
 
-    cmp.setup.cmdline(':', {
-        mapping = cmp.mapping.preset.cmdline(),
-        sources = cmp.config.sources({
-            { name = 'path' },
-            { name = 'cmdline' }
+        cmp.setup.cmdline('/', {
+            mapping = cmp.mapping.preset.cmdline(),
+            sources = {
+                { name = 'buffer' },
+            }
         })
-    })
-    vim.fn.sign_define('DiagnosticSignError', { text = '🤣', texthl = 'DiagnosticSignError' })
-    vim.fn.sign_define('DiagnosticSignWarn', { text = '🧐', texthl = 'DiagnosticSignWarn' })
-    vim.fn.sign_define('DiagnosticSignInfo', { text = '🫠', texthl = 'DiagnosticSignInfo' })
-    vim.fn.sign_define('DiagnosticSignHint', { text = '🤔', texthl = 'DiagnosticSignHint' })
-end,
+
+        cmp.setup.cmdline(':', {
+            mapping = cmp.mapping.preset.cmdline(),
+            sources = cmp.config.sources({
+                { name = 'path' },
+                { name = 'cmdline' }
+            })
+        })
+        -- vim.fn.sign_define('DiagnosticSignError', { text = '🤣', texthl = 'DiagnosticSignError' })
+        -- vim.fn.sign_define('DiagnosticSignWarn', { text = '🧐', texthl = 'DiagnosticSignWarn' })
+        -- vim.fn.sign_define('DiagnosticSignInfo', { text = '🫠', texthl = 'DiagnosticSignInfo' })
+        -- vim.fn.sign_define('DiagnosticSignHint', { text = '🤔', texthl = 'DiagnosticSignHint' })
+        --
+        vim.fn.sign_define('DiagnosticSignError', { text = '', texthl = 'DiagnosticSignError' })
+        vim.fn.sign_define('DiagnosticSignWarn', { text = '⚠', texthl = 'DiagnosticSignWarn' })
+        vim.fn.sign_define('DiagnosticSignInfo', { text = '', texthl = 'DiagnosticSignInfo' })
+        vim.fn.sign_define('DiagnosticSignHint', { text = '', texthl = 'DiagnosticSignHint' })
+
+    end,
     },
     {
         "neovim/nvim-lspconfig",
@@ -244,7 +250,7 @@ end,
                 end, '[W]orkspace [L]ist Folders')
                 nmap('<leader>D', vim.lsp.buf.type_definition, 'Type [D]efinition')
                 nmap('<leader>rn', "<cmd>Lspsaga rename ++project<cr>", '[R]e[n]ame')
-                nmap('<leader>ca', "<cmd>Lspsaga code_action<CR>", '[C]ode [A]ction')
+                nmap('<leader>ca', "<cmd>Lspsaga code_action<CR>", 'code修复')
                 nmap('<leader>da', require "telescope.builtin".diagnostics, '[D]i[A]gnostics')
                 nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
                 -- nmap('gr', vim.lsp.buf.references, '[G]oto [R]eferences')
@@ -291,7 +297,7 @@ end,
 
                     local config = {
                         -- 诊断信息是否以virtual_text显示
-                        virtual_text = false,
+                        virtual_text = true,
                         signs = {
                             active = signs,
                         },
@@ -321,4 +327,4 @@ end,
                     })
                 end
             }
-        }
+}
