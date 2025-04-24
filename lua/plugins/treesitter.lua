@@ -24,7 +24,8 @@ return {
                     "python",
                     "query",
                     "typescript",
-                    "vim"
+                    "vim",
+                    "yaml",
                 },
                 highlight = {
                     enable = true,
