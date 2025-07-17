@@ -12,21 +12,23 @@ return {
                     "bash",
                     "c",
                     "cpp",
-                    "dart",
-                    "html",
-                    "go",
-                    "java",
-                    "javascript",
                     "lua",
                     "markdown",
                     "markdown_inline",
-                    "prisma",
                     "python",
-                    "query",
-                    "typescript",
                     "vim",
-                    "yaml",
+                    "cmake",
+
+                    -- "html",
+                    -- "go",
+                    -- "java",
+                    -- "javascript",
+                    -- "prisma",
+                    -- "query",
+                    -- "typescript",
+                    -- "yaml",
                 },
+                sync_install = true,
                 highlight = {
                     enable = true,
                     disable = {}, -- list of language that will be disabled
@@ -74,7 +76,7 @@ return {
     },
     {
         'nvim-treesitter/nvim-treesitter-context',
-        ft = {"c", "lua", "cmake", "json", "xml", "markdown"},
+        ft = {"c", "cpp", "lua", "cmake", "json", "xml", "markdown"},
         config = function()
             local context = require("treesitter-context")
             context.setup({
