@@ -40,8 +40,9 @@ return {
                     })
                 end,
 
-                siliconflow = function ()
+                siliconflow_deepseek = function ()
                     return require("codecompanion.adapters").extend("openai_compatible", {
+                        name = "siliconflow_deepseek",
                         env = {
                             url = "http://api.siliconflow.cn",
                             api_key = function ()
@@ -57,9 +58,9 @@ return {
                     })
                 end,
 
-                siliconflow_r = function ()
+                siliconflow_deepseek_r = function ()
                     return require("codecompanion.adapters").extend("deepseek", {
-                        name = "siliconflow_r",
+                        name = "siliconflow_deepseek_r",
                         url = "http://api.siliconflow.cn/v1/chat/completions",
                         env = {
                             api_key = function ()
@@ -71,12 +72,73 @@ return {
                                 default = "Pro/deepseek-ai/DeepSeek-R1",
                                 choices = {
                                     ["Pro/deepseek-ai/DeepSeek-R1"] = { opts = { can_reason = true }},
-                                    "Pro/deepseek-ai/DeepSeek-V3",
                                 }
                             },
                         },
                     })
                 end,
+
+                siliconflow_qwen3 = function ()
+                    return require("codecompanion.adapters").extend("deepseek", {
+                        name = "siliconflow_qwen3",
+                        url = "http://api.siliconflow.cn/v1/chat/completions",
+                        env = {
+                            api_key = function ()
+                                return os.getenv("DEEPSEEK_API_KEY_S")
+                            end,
+                        },
+                        schema = {
+                            model = {
+                                default = "Qwen/Qwen3-235B-A22B",
+                                choices = {
+                                    ["Qwen/Qwen3-235B-A22B"] = { opts = { can_reason = true }},
+                                }
+                            },
+                        },
+                    })
+                end,
+
+                siliconflow_qwen3_8b = function ()
+                    return require("codecompanion.adapters").extend("deepseek", {
+                        name = "siliconflow_qwen3_8b",
+                        url = "http://api.siliconflow.cn/v1/chat/completions",
+                        env = {
+                            api_key = function ()
+                                return os.getenv("DEEPSEEK_API_KEY_S")
+                            end,
+                        },
+                        schema = {
+                            model = {
+                                default = "Qwen/Qwen3-8B",
+                                choices = {
+                                    ["Qwen/Qwen3-8B"] = { opts = { can_reason = false }},
+                                }
+                            },
+                        },
+                    })
+                end,
+
+                siliconflow_glm_z1_9b = function ()
+                    return require("codecompanion.adapters").extend("deepseek", {
+                        name = "siliconflow_glm_z1_9b",
+                        url = "http://api.siliconflow.cn/v1/chat/completions",
+                        env = {
+                            api_key = function ()
+                                return os.getenv("DEEPSEEK_API_KEY_S")
+                            end,
+                        },
+                        schema = {
+                            model = {
+                                default = "THUDM/GLM-Z1-9B-0414",
+                                choices = {
+                                    ["THUDM/GLM-Z1-9B-0414"] = { opts = { can_reason = false }},
+                                }
+                            },
+                        },
+                    })
+                end,
+
+
 
                 ollama = function()
                     return require("codecompanion.adapters").extend("openai_compatible", {
@@ -89,7 +151,7 @@ return {
                         },
                         schema = {
                             model = {
-                                default = "qwen2.5:3b",
+                                default = "qwen3",
                             },
                         },
                     })
@@ -97,8 +159,11 @@ return {
             },
 
             strategies = {
-                chat = {adapter = "siliconflow"},
-                inline = {adapter = "siliconflow"}
+                chat = {adapter = "siliconflow_qwen3"},
+                inline = {adapter = "siliconflow_qwen3"}
+
+                -- chat = {adapter = "siliconflow_deepseek"},
+                -- inline = {adapter = "siliconflow_deepseek"}
             },
 
             prompt_library = {
@@ -113,9 +178,17 @@ return {
                         short_name = "translate_to_zh",
                         stop_context_insertion = true,
                         adapter = {
-                            name = "ollama",
-                            model = "qwen2.5:3b"
+                            name = "siliconflow_qwen3_8b",
+                            model = "Qwen/Qwen3-8B"
+
+                            -- name = "siliconflow_glm_z1_9b",
+                            -- model = "THUDM/GLM-Z1-9B-0414"
                         },
+
+                        -- adapter = {
+                        --     name = "ollama",
+                        --     model = "qwen3"
+                        -- },
                     },
                     prompts = {
                         {
@@ -153,9 +226,17 @@ return {
                         short_name = "translate_to_en",
                         stop_context_insertion = true,
                         adapter = {
-                            name = "ollama",
-                            model = "qwen2.5:3b"
+                            name = "siliconflow_qwen3_8b",
+                            model = "Qwen/Qwen3-8B",
+
+                            -- name = "siliconflow_glm_z1_9b",
+                            -- model = "THUDM/GLM-Z1-9B-0414"
                         },
+
+                        -- adapter = {
+                        --     name = "ollama",
+                        --     model = "qwen3"
+                        -- },
                     },
                     prompts = {
                         {

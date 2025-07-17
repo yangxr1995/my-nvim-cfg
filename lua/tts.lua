@@ -49,6 +49,12 @@ local function text_to_speech()
     text = string.gsub(text, "*", " ")
     text = string.gsub(text, "`", " ")
     text = string.gsub(text, "#", " ")
+    text = string.gsub(text, "%[", " ")
+    text = string.gsub(text, "%]", " ")
+    text = string.gsub(text, "<", " ")
+    text = string.gsub(text, ">", " ")
+    text = string.gsub(text, "/", " ")
+    text = string.gsub(text, "\"", " ")
 
     -- print("Selected text: ", text)
 

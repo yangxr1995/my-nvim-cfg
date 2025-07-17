@@ -1,4 +1,3 @@
-local config = require "luasnip.config"
 return {
     {
         'nvim-tree/nvim-web-devicons',
@@ -116,8 +115,8 @@ return {
         },
 
         config = function()
-            vim.opt.termguicolors = true,
-                require("bufferline").setup {}
+            vim.opt.termguicolors = true
+            require("bufferline").setup {}
         end
     },
     {
@@ -179,7 +178,6 @@ return {
 
     },
     {
-
         'kevinhwang91/nvim-bqf', ft = 'qf'
     },
     {
