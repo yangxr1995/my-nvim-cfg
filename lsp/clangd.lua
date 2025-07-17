@@ -16,6 +16,6 @@ return {
 				editsNearCursor = true,
 			},
 		},
-		offsetEncoding = { 'utf-8' },
+		offsetEncoding = { 'utf-8', 'utf-16' },
 	},
 }

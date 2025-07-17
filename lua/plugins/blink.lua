@@ -46,7 +46,7 @@ return  {
 			['<Tab>'] = { 'snippet_forward', 'fallback' },
 			['<S-Tab>'] = { 'snippet_backward', 'fallback' },
 
-			['<S-k>'] = { 'show_signature', 'hide_signature', 'fallback' },
+			['<C-l>'] = { 'show_signature', 'hide_signature', 'fallback' },
 
 		},
 
@@ -60,6 +60,12 @@ return  {
 					auto_show = true,
 				},
 			},
+            keymap = {
+                ['<Tab>'] = {'show', 'accept'},
+                ['<C-y>'] = { 'select_and_accept' },
+                ['<C-k>'] = { 'select_prev', 'fallback_to_mappings' },
+                ['<C-j>'] = { 'select_next', 'fallback_to_mappings' },
+            },
 		},
 
 		appearance = {
