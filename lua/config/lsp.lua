@@ -1,31 +1,33 @@
-vim.lsp.enable 'lua_ls'
-vim.lsp.enable 'clangd'
-vim.lsp.enable 'cmake_ls'
-vim.lsp.enable 'bash_ls'
+-- 禁用：因为nvim的lsp有bug
+-- vim.lsp.enable 'lua_ls'
+-- vim.lsp.enable 'clangd'
+-- vim.lsp.enable 'cmake_ls'
+-- vim.lsp.enable 'bash_ls'
 
 vim.api.nvim_create_autocmd('LspAttach', {
     group = vim.api.nvim_create_augroup('lsp-attach', { clear = true }),
     callback = function(event)
         -- obtain LSP client
         local client = vim.lsp.get_client_by_id(event.data.client_id)
+
         -- [basic keymaps]
-        vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { buffer = event.buf, desc = 'LSP: Goto Definition' })
-        vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, { buffer = event.buf, desc = 'LSP: Goto Declaration' })
+        -- vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { buffer = event.buf, desc = 'LSP: Goto Definition' })
+        -- vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, { buffer = event.buf, desc = 'LSP: Goto Declaration' })
 
         -- [diagnostics]
-        vim.diagnostic.config {
-            virtual_text = true,
-            float = {severity_sort = true},
-            severity_sort = true,
-            signs = {
-                text = {
-                    [vim.diagnostic.severity.ERROR] = '',
-                    [vim.diagnostic.severity.WARN] = '⚠',
-                    [vim.diagnostic.severity.INFO] = '',
-                    [vim.diagnostic.severity.HINT] = '',
-                }
-            },
-        }
+        -- vim.diagnostic.config {
+        --     virtual_text = true,
+        --     float = {severity_sort = true},
+        --     severity_sort = true,
+        --     signs = {
+        --         text = {
+        --             [vim.diagnostic.severity.ERROR] = '',
+        --             [vim.diagnostic.severity.WARN] = '⚠',
+        --             [vim.diagnostic.severity.INFO] = '',
+        --             [vim.diagnostic.severity.HINT] = '',
+        --         }
+        --     },
+        -- }
 
         vim.keymap.set('n', '<leader>ld', function ()
             vim.diagnostic.open_float {source = true}
@@ -36,6 +38,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
             vim.diagnostic.open_float { source = true }
         end, { buffer = event.buf, desc = 'LSP: Show Diagnostic' })
 
+        -- 显示/隐藏诊断信息
         vim.keymap.set(
             'n',
             '<leader>td',
@@ -60,14 +63,12 @@ vim.api.nvim_create_autocmd('LspAttach', {
             vim.wo[win]['foldexpr'] = 'v:lua.vim.lsp.foldexpr()'
         end
 
-
         --- inlay hint
         if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
             vim.keymap.set('n', '<leader>th', function()
                 vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
             end, { buffer = event.buf, desc = 'LSP: Toggle Inlay Hints' })
         end
-
 
         -- highlight words under cursor
         if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
