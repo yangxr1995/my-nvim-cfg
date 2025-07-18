@@ -29,14 +29,10 @@ vim.api.nvim_create_autocmd('LspAttach', {
         --     },
         -- }
 
-        vim.keymap.set('n', '<leader>ld', function ()
-            vim.diagnostic.open_float {source = true}
-        end, {buffer = event.buf, desc = 'LSP: Show Diagnostic'})
-
         --- <C-W><C-D>: show diagnostic float window
         vim.keymap.set('n', '<leader>ld', function()
             vim.diagnostic.open_float { source = true }
-        end, { buffer = event.buf, desc = 'LSP: Show Diagnostic' })
+        end, { buffer = event.buf, desc = 'LSP: List Diagnostic' })
 
         -- 显示/隐藏诊断信息
         vim.keymap.set(

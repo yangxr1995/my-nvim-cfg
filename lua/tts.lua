@@ -126,9 +126,9 @@ local function replay_audio()
     end
 end
 
-vim.api.nvim_set_keymap("v", "<leader>tts", ":lua require('tts').text_to_speech()<CR>", { noremap = true, silent = true, desc = "text_to_speech" })
-vim.api.nvim_set_keymap("n", "<leader>tts", ":lua require('tts').stop_audio()<CR>", { noremap = true, silent = true , desc = "stop_audio" })
-vim.api.nvim_set_keymap("n", "<leader>ttr", ":lua require('tts').replay_audio()<CR>", { noremap = true, silent = true, desc = "replay_audio" })
+vim.api.nvim_set_keymap("v", "<leader>tts", ":lua require('tts').text_to_speech()<CR>", { noremap = true, silent = true, desc = "Text To Speed" })
+vim.api.nvim_set_keymap("n", "<leader>tts", ":lua require('tts').stop_audio()<CR>", { noremap = true, silent = true , desc = "TTS Stop" })
+vim.api.nvim_set_keymap("n", "<leader>ttr", ":lua require('tts').replay_audio()<CR>", { noremap = true, silent = true, desc = "TTS Replay" })
 
 -- 导出模块
 return {
