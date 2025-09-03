@@ -1,4 +1,3 @@
-
 local function string_filter(input, prefix)
     input = string.gsub(input, "#", " ")
     input = string.gsub(input, "@", " ")
@@ -82,6 +81,7 @@ return {
     dependencies = {
         "nvim-lua/plenary.nvim",
         "nvim-treesitter/nvim-treesitter",
+        "j-hui/fidget.nvim",
     },
     keys = {
         { "<leader>lltc", mode = "x",
@@ -96,6 +96,12 @@ return {
         desc = "英译汉" },
     },
     config = function()
+        local ret, CCFidgeHooks = pcall(require, "CCFidgeHooks")
+        if not ret then
+            print("cant find CCFidgeHooks")
+        end
+        CCFidgeHooks.init()
+
         require("codecompanion").setup({
             opts = {
                 language = "Chinese",
