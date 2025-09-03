@@ -1,3 +1,21 @@
+
+local function string_filter(input, prefix)
+    input = string.gsub(input, "#", " ")
+    input = string.gsub(input, "@", " ")
+    input = string.gsub(input, "/", " ")
+    input = string.gsub(input, "|", " ")
+    input = string.gsub(input, "&", " ")
+    input = string.gsub(input, "<", " ")
+    input = string.gsub(input, ">", " ")
+    input = string.gsub(input, "%[", " ")
+    input = string.gsub(input, "%]", " ")
+    input = string.gsub(input, "'", " ")
+    input = string.gsub(input, "`", " ")
+    return string.format(
+        prefix,
+        input)
+end
+
 return {
     "olimorris/codecompanion.nvim",
     event = "VeryLazy",
@@ -97,6 +115,26 @@ return {
                         },
                     })
                 end,
+                
+                siliconflow_qwen3_coder = function ()
+                    return require("codecompanion.adapters").extend("deepseek", {
+                        name = "siliconflow_qwen3_coder",
+                        url = "http://api.siliconflow.cn/v1/chat/completions",
+                        env = {
+                            api_key = function ()
+                                return os.getenv("DEEPSEEK_API_KEY_S")
+                            end,
+                        },
+                        schema = {
+                            model = {
+                                default = "Qwen/Qwen3-Coder-480B-A35B-Instruct",
+                                choices = {
+                                    ["Qwen/Qwen3-Coder-480B-A35B-Instruct"] = { opts = { can_reason = false }},
+                                }
+                            },
+                        },
+                    })
+                end,
 
                 siliconflow_qwen3_8b = function ()
                     return require("codecompanion.adapters").extend("deepseek", {
@@ -160,7 +198,7 @@ return {
 
             strategies = {
                 chat = {adapter = "siliconflow_qwen3"},
-                inline = {adapter = "siliconflow_qwen3"}
+                inline = {adapter = "siliconflow_qwen3_coder"}
 
                 -- chat = {adapter = "siliconflow_deepseek"},
                 -- inline = {adapter = "siliconflow_deepseek"}
@@ -202,14 +240,7 @@ return {
                             role = "user",
                             content = function (context)
                                 local input = require("codecompanion.helpers.actions").get_code(context.start_line, context.end_line)
-                                input = string.gsub(input, "#", " ")
-                                input = string.gsub(input, "@", " ")
-                                input = string.gsub(input, "/", " ")
-                                input = string.gsub(input, "|", " ")
-                                input = string.gsub(input, "&", " ")
-                                return string.format(
-                                    "请将接下来的内容翻译为中文，不要做翻译外的任何工作:'%s'",
-                                    input)
+                                return string_filter(input, "请将接下来的内容翻译为中文，不要做翻译外的任何工作:'%s'")
                             end,
                         }
                     },
@@ -250,15 +281,8 @@ return {
                             role = "user",
                             content = function (context)
                                 local input = require("codecompanion.helpers.actions").get_code(context.start_line, context.end_line)
-                                input = string.gsub(input, "#", " ")
-                                input = string.gsub(input, "@", " ")
-                                input = string.gsub(input, "/", " ")
-                                input = string.gsub(input, "|", " ")
-                                input = string.gsub(input, "&", " ")
-                                return string.format(
-                                    "请将接下来的内容翻译为英文，不要做翻译外的任何工作:'%s'",
-                                    input)
-                                end,
+                                return string_filter(input, "请将接下来的内容翻译为英文，不要做翻译外的任何工作:'%s'")
+                            end,
                             }
                         },
                     },
