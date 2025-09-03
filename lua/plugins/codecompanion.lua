@@ -30,9 +30,12 @@ local function siliconflow_adapter(name, model, can_reason)
                 model = {
                     default = model,
                     choices = {
-                        [model] = { opts = { can_reason = can_reason }},
+                        [model] = { opts = { can_reason = false }},
                     }
                 },
+                think = {
+                    default = false,
+                }
             },
         })
     end
@@ -50,9 +53,11 @@ local function translate_adapter(language, short_name)
             short_name = "translate_to_" .. short_name,
             stop_context_insertion = true,
             adapter = {
-                name = "siliconflow_qwen3_8b",
-                model = "Qwen/Qwen3-8B"
+                -- name = "siliconflow_qwen3_8b",
+                -- model = "Qwen/Qwen3-8B"
 
+                name = "siliconflow_glm_32b",
+                model = "THUDM/GLM-4-32B-0414"
             },
         },
         prompts = {
@@ -126,10 +131,11 @@ return {
 
                     siliconflow_deepseek = siliconflow_adapter("siliconflow_deepseek", "Pro/deepseek-ai/DeepSeek-V3.1", true),
                     siliconflow_deepseek_r = siliconflow_adapter("siliconflow_deepseek_r", "Pro/deepseek-ai/DeepSeek-R1", true),
-                    siliconflow_qwen3 = siliconflow_adapter("siliconflow_qwen3", "Qwen/Qwen3-235B-A22B", true),
+                    siliconflow_qwen3 = siliconflow_adapter("siliconflow_qwen3", "Qwen/Qwen3-235B-A22B", false),
                     siliconflow_qwen3_coder = siliconflow_adapter("siliconflow_qwen3_coder", "Qwen/Qwen3-Coder-480B-A35B-Instruct", false),
                     siliconflow_qwen3_8b = siliconflow_adapter("siliconflow_qwen3_8b", "Qwen/Qwen3-8B", false),
                     siliconflow_glm_z1_9b = siliconflow_adapter("siliconflow_glm_z1_9b", "THUDM/GLM-Z1-9B-0414", false),
+                    siliconflow_glm_32b = siliconflow_adapter("siliconflow_glm_32b", "THUDM/GLM-4-32B-0414", false),
 
 
                     ollama = function()
@@ -154,7 +160,7 @@ return {
             },
 
             strategies = {
-                chat = {adapter = "siliconflow_qwen3"},
+                chat = {adapter = "siliconflow_deepseek"},
                 inline = {adapter = "siliconflow_qwen3_coder"}
             },
 
