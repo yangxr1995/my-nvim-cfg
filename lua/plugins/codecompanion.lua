@@ -42,158 +42,161 @@ return {
                 language = "Chinese",
             },
             adapters = {
-
-                deepseek = function ()
-                    return require("codecompanion.adapters").extend("deepseek", {
-                        env = {
-                            api_key = function()
-                                return os.getenv("DEEPSEEK_API_KEY")
-                            end,
-                        },
-                        schema = {
-                            model = {
-                                default = "deepseek-chat",
+                http = {
+                    deepseek = function ()
+                        return require("codecompanion.adapters").extend("deepseek", {
+                            env = {
+                                api_key = function()
+                                    return os.getenv("DEEPSEEK_API_KEY")
+                                end,
                             },
-                        },
-                    })
-                end,
-
-                siliconflow_deepseek = function ()
-                    return require("codecompanion.adapters").extend("openai_compatible", {
-                        name = "siliconflow_deepseek",
-                        env = {
-                            url = "http://api.siliconflow.cn",
-                            api_key = function ()
-                                return os.getenv("DEEPSEEK_API_KEY_S")
-                            end,
-                            chat_url = "/v1/chat/completions",
-                        },
-                        schema = {
-                            model = {
-                                default = "Pro/deepseek-ai/DeepSeek-V3",
+                            schema = {
+                                model = {
+                                    default = "deepseek-chat",
+                                },
                             },
-                        },
-                    })
-                end,
+                        })
+                    end,
 
-                siliconflow_deepseek_r = function ()
-                    return require("codecompanion.adapters").extend("deepseek", {
-                        name = "siliconflow_deepseek_r",
-                        url = "http://api.siliconflow.cn/v1/chat/completions",
-                        env = {
-                            api_key = function ()
-                                return os.getenv("DEEPSEEK_API_KEY_S")
-                            end,
-                        },
-                        schema = {
-                            model = {
-                                default = "Pro/deepseek-ai/DeepSeek-R1",
-                                choices = {
-                                    ["Pro/deepseek-ai/DeepSeek-R1"] = { opts = { can_reason = true }},
-                                }
+                    siliconflow_deepseek = function ()
+                        return require("codecompanion.adapters").extend("openai_compatible", {
+                            name = "siliconflow_deepseek",
+                            env = {
+                                url = "http://api.siliconflow.cn",
+                                api_key = function ()
+                                    return os.getenv("DEEPSEEK_API_KEY_S")
+                                end,
+                                chat_url = "/v1/chat/completions",
                             },
-                        },
-                    })
-                end,
-
-                siliconflow_qwen3 = function ()
-                    return require("codecompanion.adapters").extend("deepseek", {
-                        name = "siliconflow_qwen3",
-                        url = "http://api.siliconflow.cn/v1/chat/completions",
-                        env = {
-                            api_key = function ()
-                                return os.getenv("DEEPSEEK_API_KEY_S")
-                            end,
-                        },
-                        schema = {
-                            model = {
-                                default = "Qwen/Qwen3-235B-A22B",
-                                choices = {
-                                    ["Qwen/Qwen3-235B-A22B"] = { opts = { can_reason = true }},
-                                }
+                            schema = {
+                                model = {
+                                    default = "Pro/deepseek-ai/DeepSeek-V3",
+                                },
                             },
-                        },
-                    })
-                end,
-                
-                siliconflow_qwen3_coder = function ()
-                    return require("codecompanion.adapters").extend("deepseek", {
-                        name = "siliconflow_qwen3_coder",
-                        url = "http://api.siliconflow.cn/v1/chat/completions",
-                        env = {
-                            api_key = function ()
-                                return os.getenv("DEEPSEEK_API_KEY_S")
-                            end,
-                        },
-                        schema = {
-                            model = {
-                                default = "Qwen/Qwen3-Coder-480B-A35B-Instruct",
-                                choices = {
-                                    ["Qwen/Qwen3-Coder-480B-A35B-Instruct"] = { opts = { can_reason = false }},
-                                }
+                        })
+                    end,
+
+                    siliconflow_deepseek_r = function ()
+                        return require("codecompanion.adapters").extend("deepseek", {
+                            name = "siliconflow_deepseek_r",
+                            url = "http://api.siliconflow.cn/v1/chat/completions",
+                            env = {
+                                api_key = function ()
+                                    return os.getenv("DEEPSEEK_API_KEY_S")
+                                end,
                             },
-                        },
-                    })
-                end,
-
-                siliconflow_qwen3_8b = function ()
-                    return require("codecompanion.adapters").extend("deepseek", {
-                        name = "siliconflow_qwen3_8b",
-                        url = "http://api.siliconflow.cn/v1/chat/completions",
-                        env = {
-                            api_key = function ()
-                                return os.getenv("DEEPSEEK_API_KEY_S")
-                            end,
-                        },
-                        schema = {
-                            model = {
-                                default = "Qwen/Qwen3-8B",
-                                choices = {
-                                    ["Qwen/Qwen3-8B"] = { opts = { can_reason = false }},
-                                }
+                            schema = {
+                                model = {
+                                    default = "Pro/deepseek-ai/DeepSeek-R1",
+                                    choices = {
+                                        ["Pro/deepseek-ai/DeepSeek-R1"] = { opts = { can_reason = true }},
+                                    }
+                                },
                             },
-                        },
-                    })
-                end,
+                        })
+                    end,
 
-                siliconflow_glm_z1_9b = function ()
-                    return require("codecompanion.adapters").extend("deepseek", {
-                        name = "siliconflow_glm_z1_9b",
-                        url = "http://api.siliconflow.cn/v1/chat/completions",
-                        env = {
-                            api_key = function ()
-                                return os.getenv("DEEPSEEK_API_KEY_S")
-                            end,
-                        },
-                        schema = {
-                            model = {
-                                default = "THUDM/GLM-Z1-9B-0414",
-                                choices = {
-                                    ["THUDM/GLM-Z1-9B-0414"] = { opts = { can_reason = false }},
-                                }
+                    siliconflow_qwen3 = function ()
+                        return require("codecompanion.adapters").extend("deepseek", {
+                            name = "siliconflow_qwen3",
+                            url = "http://api.siliconflow.cn/v1/chat/completions",
+                            env = {
+                                api_key = function ()
+                                    return os.getenv("DEEPSEEK_API_KEY_S")
+                                end,
                             },
-                        },
-                    })
-                end,
-
-
-
-                ollama = function()
-                    return require("codecompanion.adapters").extend("openai_compatible", {
-                        name = "ollama", -- Give this adapter a different name to differentiate it from the default ollama adapter
-                        url = "${url}/v1/chat/completions",
-                        env = {
-                            url = "http://192.168.3.1:11434",
-                            chat_url = "/api/chat", -- optional: default value, override if different
-                            models_endpoint = "/api/tags", -- optional: attaches to the end of the URL to form the endpoint to retrieve models
-                        },
-                        schema = {
-                            model = {
-                                default = "qwen3",
+                            schema = {
+                                model = {
+                                    default = "Qwen/Qwen3-235B-A22B",
+                                    choices = {
+                                        ["Qwen/Qwen3-235B-A22B"] = { opts = { can_reason = true }},
+                                    }
+                                },
                             },
-                        },
-                    })
-                end,
+                        })
+                    end,
+
+                    siliconflow_qwen3_coder = function ()
+                        return require("codecompanion.adapters").extend("deepseek", {
+                            name = "siliconflow_qwen3_coder",
+                            url = "http://api.siliconflow.cn/v1/chat/completions",
+                            env = {
+                                api_key = function ()
+                                    return os.getenv("DEEPSEEK_API_KEY_S")
+                                end,
+                            },
+                            schema = {
+                                model = {
+                                    default = "Qwen/Qwen3-Coder-480B-A35B-Instruct",
+                                    choices = {
+                                        ["Qwen/Qwen3-Coder-480B-A35B-Instruct"] = { opts = { can_reason = false }},
+                                    }
+                                },
+                            },
+                        })
+                    end,
+
+                    siliconflow_qwen3_8b = function ()
+                        return require("codecompanion.adapters").extend("deepseek", {
+                            name = "siliconflow_qwen3_8b",
+                            url = "http://api.siliconflow.cn/v1/chat/completions",
+                            env = {
+                                api_key = function ()
+                                    return os.getenv("DEEPSEEK_API_KEY_S")
+                                end,
+                            },
+                            schema = {
+                                model = {
+                                    default = "Qwen/Qwen3-8B",
+                                    choices = {
+                                        ["Qwen/Qwen3-8B"] = { opts = { can_reason = false }},
+                                    }
+                                },
+                            },
+                        })
+                    end,
+
+                    siliconflow_glm_z1_9b = function ()
+                        return require("codecompanion.adapters").extend("deepseek", {
+                            name = "siliconflow_glm_z1_9b",
+                            url = "http://api.siliconflow.cn/v1/chat/completions",
+                            env = {
+                                api_key = function ()
+                                    return os.getenv("DEEPSEEK_API_KEY_S")
+                                end,
+                            },
+                            schema = {
+                                model = {
+                                    default = "THUDM/GLM-Z1-9B-0414",
+                                    choices = {
+                                        ["THUDM/GLM-Z1-9B-0414"] = { opts = { can_reason = false }},
+                                    }
+                                },
+                            },
+                        })
+                    end,
+
+
+
+                    ollama = function()
+                        return require("codecompanion.adapters").extend("openai_compatible", {
+                            name = "ollama", -- Give this adapter a different name to differentiate it from the default ollama adapter
+                            url = "${url}/v1/chat/completions",
+                            env = {
+                                url = "http://192.168.3.1:11434",
+                                chat_url = "/api/chat", -- optional: default value, override if different
+                                models_endpoint = "/api/tags", -- optional: attaches to the end of the URL to form the endpoint to retrieve models
+                            },
+                            schema = {
+                                model = {
+                                    default = "qwen3",
+                                },
+                            },
+                        })
+                    end,
+
+                },
+
             },
 
             strategies = {
