@@ -1,4 +1,3 @@
-
 local function string_filter(input, prefix)
     input = string.gsub(input, "#", " ")
     input = string.gsub(input, "@", " ")
@@ -16,6 +15,70 @@ local function string_filter(input, prefix)
         input)
 end
 
+-- 硅基流动适配器工厂函数
+local function siliconflow_adapter(name, model, can_reason)
+    return function()
+        return require("codecompanion.adapters").extend("deepseek", {
+            name = name,
+            url = "http://api.siliconflow.cn/v1/chat/completions",
+            env = {
+                api_key = function()
+                    return os.getenv("DEEPSEEK_API_KEY_S")
+                end,
+            },
+            schema = {
+                model = {
+                    default = model,
+                    choices = {
+                        [model] = { opts = { can_reason = false }},
+                    }
+                },
+                think = {
+                    default = false,
+                }
+            },
+        })
+    end
+end
+
+local function translate_adapter(language, short_name)
+    return {
+        strategy = "chat",
+        description = "将所选内容翻译为" .. language,
+        opts = {
+            models = { "v" },
+            user_prompt = false,
+            is_slash_cmd = false,
+            auto_submit = true,
+            short_name = "translate_to_" .. short_name,
+            stop_context_insertion = true,
+            adapter = {
+                -- name = "siliconflow_qwen3_8b",
+                -- model = "Qwen/Qwen3-8B"
+
+                name = "siliconflow_glm_32b",
+                model = "THUDM/GLM-4-32B-0414"
+            },
+        },
+        prompts = {
+            {
+                role = "system",
+                content = "你是翻译专家，尤其擅长将各类语言翻译为" .. language,
+                opts = {
+                    visible = false,
+                },
+            },
+            {
+                role = "user",
+                content = function (context)
+                    local input = require("codecompanion.helpers.actions").get_code(context.start_line, context.end_line)
+                    return string_filter(input, "请将接下来的内容翻译为" .. language .. "，不要做翻译外的任何工作，不需要显示原文，只显示翻译结果:'%s'")
+                end,
+            }
+        },
+    }
+end
+
 return {
     "olimorris/codecompanion.nvim",
     event = "VeryLazy",
@@ -23,6 +86,7 @@ return {
     dependencies = {
         "nvim-lua/plenary.nvim",
         "nvim-treesitter/nvim-treesitter",
+        "j-hui/fidget.nvim",
     },
     keys = {
         { "<leader>lltc", mode = "x",
@@ -37,12 +101,19 @@ return {
         desc = "英译汉" },
     },
     config = function()
+        local ret, CCFidgeHooks = pcall(require, "CCFidgeHooks")
+        if not ret then
+            print("cant find CCFidgeHooks")
+        end
+        CCFidgeHooks.init()
+
         require("codecompanion").setup({
             opts = {
                 language = "Chinese",
             },
             adapters = {
                 http = {
+
                     deepseek = function ()
                         return require("codecompanion.adapters").extend("deepseek", {
                             env = {
@@ -58,124 +129,13 @@ return {
                         })
                     end,
 
-                    siliconflow_deepseek = function ()
-                        return require("codecompanion.adapters").extend("openai_compatible", {
-                            name = "siliconflow_deepseek",
-                            env = {
-                                url = "http://api.siliconflow.cn",
-                                api_key = function ()
-                                    return os.getenv("DEEPSEEK_API_KEY_S")
-                                end,
-                                chat_url = "/v1/chat/completions",
-                            },
-                            schema = {
-                                model = {
-                                    default = "Pro/deepseek-ai/DeepSeek-V3",
-                                },
-                            },
-                        })
-                    end,
-
-                    siliconflow_deepseek_r = function ()
-                        return require("codecompanion.adapters").extend("deepseek", {
-                            name = "siliconflow_deepseek_r",
-                            url = "http://api.siliconflow.cn/v1/chat/completions",
-                            env = {
-                                api_key = function ()
-                                    return os.getenv("DEEPSEEK_API_KEY_S")
-                                end,
-                            },
-                            schema = {
-                                model = {
-                                    default = "Pro/deepseek-ai/DeepSeek-R1",
-                                    choices = {
-                                        ["Pro/deepseek-ai/DeepSeek-R1"] = { opts = { can_reason = true }},
-                                    }
-                                },
-                            },
-                        })
-                    end,
-
-                    siliconflow_qwen3 = function ()
-                        return require("codecompanion.adapters").extend("deepseek", {
-                            name = "siliconflow_qwen3",
-                            url = "http://api.siliconflow.cn/v1/chat/completions",
-                            env = {
-                                api_key = function ()
-                                    return os.getenv("DEEPSEEK_API_KEY_S")
-                                end,
-                            },
-                            schema = {
-                                model = {
-                                    default = "Qwen/Qwen3-235B-A22B",
-                                    choices = {
-                                        ["Qwen/Qwen3-235B-A22B"] = { opts = { can_reason = true }},
-                                    }
-                                },
-                            },
-                        })
-                    end,
-
-                    siliconflow_qwen3_coder = function ()
-                        return require("codecompanion.adapters").extend("deepseek", {
-                            name = "siliconflow_qwen3_coder",
-                            url = "http://api.siliconflow.cn/v1/chat/completions",
-                            env = {
-                                api_key = function ()
-                                    return os.getenv("DEEPSEEK_API_KEY_S")
-                                end,
-                            },
-                            schema = {
-                                model = {
-                                    default = "Qwen/Qwen3-Coder-480B-A35B-Instruct",
-                                    choices = {
-                                        ["Qwen/Qwen3-Coder-480B-A35B-Instruct"] = { opts = { can_reason = false }},
-                                    }
-                                },
-                            },
-                        })
-                    end,
-
-                    siliconflow_qwen3_8b = function ()
-                        return require("codecompanion.adapters").extend("deepseek", {
-                            name = "siliconflow_qwen3_8b",
-                            url = "http://api.siliconflow.cn/v1/chat/completions",
-                            env = {
-                                api_key = function ()
-                                    return os.getenv("DEEPSEEK_API_KEY_S")
-                                end,
-                            },
-                            schema = {
-                                model = {
-                                    default = "Qwen/Qwen3-8B",
-                                    choices = {
-                                        ["Qwen/Qwen3-8B"] = { opts = { can_reason = false }},
-                                    }
-                                },
-                            },
-                        })
-                    end,
-
-                    siliconflow_glm_z1_9b = function ()
-                        return require("codecompanion.adapters").extend("deepseek", {
-                            name = "siliconflow_glm_z1_9b",
-                            url = "http://api.siliconflow.cn/v1/chat/completions",
-                            env = {
-                                api_key = function ()
-                                    return os.getenv("DEEPSEEK_API_KEY_S")
-                                end,
-                            },
-                            schema = {
-                                model = {
-                                    default = "THUDM/GLM-Z1-9B-0414",
-                                    choices = {
-                                        ["THUDM/GLM-Z1-9B-0414"] = { opts = { can_reason = false }},
-                                    }
-                                },
-                            },
-                        })
-                    end,
-
+                    siliconflow_deepseek = siliconflow_adapter("siliconflow_deepseek", "Pro/deepseek-ai/DeepSeek-V3.1", true),
+                    siliconflow_deepseek_r = siliconflow_adapter("siliconflow_deepseek_r", "Pro/deepseek-ai/DeepSeek-R1", true),
+                    siliconflow_qwen3 = siliconflow_adapter("siliconflow_qwen3", "Qwen/Qwen3-235B-A22B", false),
+                    siliconflow_qwen3_coder = siliconflow_adapter("siliconflow_qwen3_coder", "Qwen/Qwen3-Coder-480B-A35B-Instruct", false),
+                    siliconflow_qwen3_8b = siliconflow_adapter("siliconflow_qwen3_8b", "Qwen/Qwen3-8B", false),
+                    siliconflow_glm_z1_9b = siliconflow_adapter("siliconflow_glm_z1_9b", "THUDM/GLM-Z1-9B-0414", false),
+                    siliconflow_glm_32b = siliconflow_adapter("siliconflow_glm_32b", "THUDM/GLM-4-32B-0414", false),
 
 
                     ollama = function()
@@ -200,98 +160,16 @@ return {
             },
 
             strategies = {
-                chat = {adapter = "siliconflow_qwen3"},
+                chat = {adapter = "siliconflow_deepseek"},
                 inline = {adapter = "siliconflow_qwen3_coder"}
-
-                -- chat = {adapter = "siliconflow_deepseek"},
-                -- inline = {adapter = "siliconflow_deepseek"}
             },
 
             prompt_library = {
-                ["翻译为中文"] = {
-                    strategy = "chat",
-                    description = "将所选内容翻译为中文",
-                    opts = {
-                        models = { "v" },
-                        user_prompt = false,
-                        is_slash_cmd = false,
-                        auto_submit = true,
-                        short_name = "translate_to_zh",
-                        stop_context_insertion = true,
-                        adapter = {
-                            name = "siliconflow_qwen3_8b",
-                            model = "Qwen/Qwen3-8B"
-
-                            -- name = "siliconflow_glm_z1_9b",
-                            -- model = "THUDM/GLM-Z1-9B-0414"
-                        },
-
-                        -- adapter = {
-                        --     name = "ollama",
-                        --     model = "qwen3"
-                        -- },
-                    },
-                    prompts = {
-                        {
-                            role = "system",
-                            content = "你是英译汉专家",
-                            opts = {
-                                visible = false,
-                            },
-                        },
-                        {
-                            role = "user",
-                            content = function (context)
-                                local input = require("codecompanion.helpers.actions").get_code(context.start_line, context.end_line)
-                                return string_filter(input, "请将接下来的内容翻译为中文，不要做翻译外的任何工作:'%s'")
-                            end,
-                        }
-                    },
-                },
-
-                ["翻译为英文"] = {
-                    strategy = "chat",
-                    description = "将所选内容翻译为英文",
-                    opts = {
-                        models = { "v" },
-                        user_prompt = false,
-                        is_slash_cmd = false,
-                        auto_submit = true,
-                        short_name = "translate_to_en",
-                        stop_context_insertion = true,
-                        adapter = {
-                            name = "siliconflow_qwen3_8b",
-                            model = "Qwen/Qwen3-8B",
-
-                            -- name = "siliconflow_glm_z1_9b",
-                            -- model = "THUDM/GLM-Z1-9B-0414"
-                        },
-
-                        -- adapter = {
-                        --     name = "ollama",
-                        --     model = "qwen3"
-                        -- },
-                    },
-                    prompts = {
-                        {
-                            role = "system",
-                            content = "你是汉译英专家",
-                            opts = {
-                                visible = false,
-                            },
-                        },
-                        {
-                            role = "user",
-                            content = function (context)
-                                local input = require("codecompanion.helpers.actions").get_code(context.start_line, context.end_line)
-                                return string_filter(input, "请将接下来的内容翻译为英文，不要做翻译外的任何工作:'%s'")
-                            end,
-                            }
-                        },
-                    },
-                },
-            })
-        end,
+                ["翻译为中文"] = translate_adapter("中文", "zh"),
+                ["翻译为英文"] = translate_adapter("英文", "en"),
+            },
+        })
+    end,
 
     }
 
