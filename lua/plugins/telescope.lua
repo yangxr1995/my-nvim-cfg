@@ -1,3 +1,10 @@
+-- 封装：只搜索 c 文件
+local live_grep_c = function()
+  require('telescope.builtin').live_grep({
+    additional_args = {'-g', '*.{c,h,cc,cpp,hpp}'},
+    prompt_title = 'Live Grep (C/Cpp)',
+  })
+end
 
 return {
     {
@@ -11,7 +18,8 @@ return {
             { 'nvim-telescope/telescope-fzf-native.nvim', build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release' }
         },
         keys = {
-            { 'rr', function() require('telescope.builtin').live_grep() end ,  desc = "live grep"  },
+            { 'rra', function() require('telescope.builtin').live_grep() end ,  desc = "live grep"  },
+            { 'rrc', live_grep_c ,  desc = "live grep C/Cpp"  },
             { 'rf', function() require('telescope.builtin').find_files() end ,  desc = "find files"  },
             { 'rs', function() require('telescope.builtin').lsp_dynamic_workspace_symbols() end ,  desc = "find lsp symbols"  },
         },
