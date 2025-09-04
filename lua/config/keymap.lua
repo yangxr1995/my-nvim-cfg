@@ -49,3 +49,17 @@ keymap("t", "<C-h>", "<C-\\><C-N><C-w>h", term_opts)
 keymap("t", "<C-j>", "<C-\\><C-N><C-w>j", term_opts)
 keymap("t", "<C-k>", "<C-\\><C-N><C-w>k", term_opts)
 keymap("t", "<C-l>", "<C-\\><C-N><C-w>l", term_opts)
+
+
+-- high light
+local function cursor_line_highlight()
+    -- 获取光标位置
+    local cursor_pos = vim.api.nvim_win_get_cursor(0)
+    local line_num = cursor_pos[1]
+
+    vim.cmd("match Search /\\%" .. line_num .. "l/")
+end
+
+vim.keymap.set("n", "<leader>cl", cursor_line_highlight, { desc = "获取当前行" })
+vim.keymap.set("n", "<leader>cc", ":match None<CR>", { desc = "取消高亮" })
+
