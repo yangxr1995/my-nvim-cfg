@@ -24,14 +24,14 @@ return  {
 			-- 'none' for no mappings
 			--
 			-- All presets have the following mappings:
-			-- C-space: Open menu or open docs if already open
+			-- C-s: Open menu or open docs if already open
 			-- C-n/C-p or Up/Down: Select next/previous item
 			-- C-e: Hide menu
 			-- C-k: Toggle signature help (if signature.enabled = true)
 			--
 			-- See :h blink-cmp-config-keymap for defining your own keymap
 			keymap = { preset = 'none' ,
-			['<C-space>'] = { 'show', 'show_documentation', 'hide_documentation' },
+			['<C-s>'] = { 'show', 'show_documentation', 'hide_documentation' },
 			['<C-e>'] = { 'hide' },
 			['<C-y>'] = { 'select_and_accept' },
 
@@ -47,7 +47,6 @@ return  {
 			['<S-Tab>'] = { 'snippet_backward', 'fallback' },
 
 			-- ['<C-l>'] = { 'show_signature', 'hide_signature', 'fallback' },
-
 		},
 
 		signature = {
@@ -94,18 +93,30 @@ return  {
 		},
 
 		sources = {
-			default = { "lazydev", "lsp", "path", "snippets", "buffer" },
+			default = { "lazydev", "path", "snippets", "buffer", "lsp" },
 			providers = {
 				lazydev = {
 					name = "LazyDev",
 					module = "lazydev.integrations.blink",
-					score_offset = 100,
+					score_offset = 3,
 				},
+                path = {
+                    score_offset = 1,
+                },
+                snippets = {
+                    score_offset = 10,
+                },
+                buffer = {
+                    score_offset = 2,
+                },
+                lsp = {
+                    score_offset = 4,
+                },
 			},
 		},
 
 		fuzzy = { implementation = "prefer_rust_with_warning" },
-	},
+    },
 	opts_extend = { "sources.default" }
 },
 
