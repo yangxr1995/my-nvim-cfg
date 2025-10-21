@@ -16,7 +16,7 @@ return  {
 		event = {'BufReadPost', 'BufNewFile'},
 		dependencies = {{ 'rafamadriz/friendly-snippets' }, {'xzbdmw/colorful-menu.nvim', opts = {} }},
 
-		version = '1.*',
+		version = '1.6',
 		opts = {
 			-- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
 			-- 'super-tab' for mappings similar to vscode (tab to accept)
@@ -60,12 +60,12 @@ return  {
 					auto_show = true,
 				},
 			},
-            keymap = {
-                ['<Tab>'] = {'show', 'accept'},
-                ['<C-y>'] = { 'select_and_accept' },
-                ['<C-k>'] = { 'select_prev', 'fallback_to_mappings' },
-                ['<C-j>'] = { 'select_next', 'fallback_to_mappings' },
-            },
+		          keymap = {
+		              ['<Tab>'] = {'show', 'accept'},
+		              ['<C-y>'] = { 'select_and_accept' },
+		              ['<C-k>'] = { 'select_prev', 'fallback_to_mappings' },
+		              ['<C-j>'] = { 'select_next', 'fallback_to_mappings' },
+		          },
 		},
 
 		appearance = {

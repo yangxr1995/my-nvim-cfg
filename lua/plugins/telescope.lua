@@ -6,6 +6,28 @@ local live_grep_c = function()
   })
 end
 
+local live_grep_gtags = function()
+  -- 首先读取 gtags-list 文件内容
+  local file = io.open("gtags-list", "r")
+  if not file then
+    print("gtags-list 文件不存在")
+    return
+  end
+  
+  local file_list = {}
+  for line in file:lines() do
+    table.insert(file_list, line)
+  end
+  file:close()
+  
+  -- 使用 find_files 的搜索目录功能
+  require('telescope.builtin').live_grep({
+    prompt_title = 'Live Grep (gtags)',
+    search_dirs = file_list
+  })
+end
+
+
 return {
     {
         'nvim-telescope/telescope.nvim',
@@ -20,6 +42,7 @@ return {
         keys = {
             { 'rra', function() require('telescope.builtin').live_grep() end ,  desc = "live grep"  },
             { 'rrc', live_grep_c ,  desc = "live grep C/Cpp"  },
+            { 'rrg', live_grep_gtags ,  desc = "live grep gtags"  },
             { 'rf', function() require('telescope.builtin').find_files() end ,  desc = "find files"  },
             { 'rs', function() require('telescope.builtin').lsp_dynamic_workspace_symbols() end ,  desc = "find lsp symbols"  },
         },
