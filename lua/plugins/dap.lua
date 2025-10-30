@@ -35,103 +35,70 @@ return {
 
         config = function()
             local dap = require("dap")
-            dap.adapters.cppdbg = {
-                id = "cppdbg",
+
+            dap.adapters.gdb = {
                 type = "executable",
-                command = "/root/.local/share/nvim/mason/bin/OpenDebugAD7", -- cpptools
+                command = "gdb",
+                args = { "--interpreter=dap",
+                        "--eval-command", "set print pretty on",
+                }
             }
-            dap.configurations.cpp = {
+
+            dap.adapters.gdb_aarch64 = {
+                type = "executable",
+                command = "gdb-multiarch",
+                args = { "--interpreter=dap",
+                        "--eval-command", "set-architecture aarch64",
+                        "--eval-command", "set print pretty on",
+                }
+            }
+
+            dap.configurations.c = {
                 {
                     name = "Launch",
-                    type = "cppdbg",
+                    type = "gdb",
                     request = "launch",
                     program = function()
-                        -- 带路径提示的可执行文件选择
                         return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
                     end,
-                    args = function()
-                        -- 新增交互式参数输入
-                        local input_args = vim.fn.input('Program arguments (space separated): ')
-                        return vim.split(input_args, ' ')  -- 将输入字符串转为数组
-                    end,
+                    args = {}, -- provide arguments if needed
                     cwd = "${workspaceFolder}",
-                    stopAtEntry = true,
-                    -- 新增环境变量配置（可选）
-                    environment = function()
-                        local env_input = vim.fn.input('Environment variables (KEY=VAL; comma separated): ')
-                        if env_input ~= '' then
-                            return vim.split(env_input, ';%s*')
-                        end
-                    end,
-                    setupCommands = {
-                        {
-                            text = '-enable-pretty-printing',
-                            description = 'Enable GDB pretty printing',
-                            ignoreFailures = true
-                        }
-                    }
+                    stopAtBeginningOfMainSubprogram = false,
                 },
                 {
                     name = "Select and attach to process",
-                    type = "cppdbg",
+                    type = "gdb",
                     request = "attach",
                     program = function()
                         return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
                     end,
-                    processId = function()
+                    pid = function()
                         local name = vim.fn.input('Executable name (filter): ')
                         return require("dap.utils").pick_process({ filter = name })
                     end,
-                    cwd = '${workspaceFolder}',
-                    setupCommands = {
-                        {
-                            text = '-enable-pretty-printing',
-                            description = 'Enable GDB pretty printing',
-                            ignoreFailures = true
-                        }
-                    }
+                    cwd = '${workspaceFolder}'
                 },
                 {
-                    name = 'Attach to localhost :1234 (x86)',
-                    type = 'cppdbg',
-                    request = 'launch',
-                    MIMode = 'gdb',
-                    miDebuggerServerAddress = 'localhost:1234',
-                    miDebuggerPath = '/usr/local/gdb-x86/bin/gdb',
-                    cwd = '${workspaceFolder}',
+                    name = 'Attach to gdbserver :1234',
+                    type = 'gdb',
+                    request = 'attach',
+                    target = 'localhost:1234',
                     program = function()
                         return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
                     end,
+                    cwd = '${workspaceFolder}'
                 },
                 {
-                    name = 'attach to 192.168.33.1:1234 (ARM)',
-                    type = 'cppdbg',
-                    request = 'launch',
-                    MIMode = 'gdb',
-                    miDebuggerServerAddress = '192.168.33.1:1234',
-                    miDebuggerPath = '/usr/local/gdb-x86/bin/gdb',
-                    miDebuggerArgs = '--eval-command "set solib-sear ./" --eval-command "set sysroot ./"',
-                    cwd = '${workspaceFolder}',
+                    name = 'Attach to gdbserver :1234',
+                    type = 'gdb_aarch64',
+                    request = 'attach',
+                    target = 'localhost:1234',
                     program = function()
                         return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
                     end,
-                },
-                {
-                    name = 'attach to 192.168.0.1:1234 (ARM)',
-                    type = 'cppdbg',
-                    request = 'launch',
-                    MIMode = 'gdb',
-                    miDebuggerServerAddress = '192.168.0.1:1234',
-                    miDebuggerPath = '/usr/local/gdb-arm/bin/arm-linux-gdb',
-                    miDebuggerArgs = '--eval-command "set solib-sear ./" --eval-command "set sysroot ./"',
-                    cwd = '${workspaceFolder}',
-                    program = function()
-                        return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
-                    end,
-                },
-
+                    cwd = '${workspaceFolder}'
+                }
             }
-            dap.configurations.c = dap.configurations.cpp
         end
     },
     {

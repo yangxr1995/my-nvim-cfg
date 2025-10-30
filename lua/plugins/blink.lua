@@ -104,13 +104,13 @@ return  {
                     score_offset = 1,
                 },
                 snippets = {
-                    score_offset = 10,
+                    score_offset = 4,
                 },
                 buffer = {
                     score_offset = 2,
                 },
                 lsp = {
-                    score_offset = 4,
+                    score_offset = 10,
                 },
 			},
 		},
