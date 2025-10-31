@@ -15,6 +15,32 @@ local function string_filter(input, prefix)
         input)
 end
 
+-- minimax
+local function minimax_adapter(name, model, can_reason)
+    return function()
+        return require("codecompanion.adapters").extend("deepseek", {
+            name = name,
+            url = "https://api.minimaxi.com/v1/chat/completions",
+            env = {
+                api_key = function()
+                    return os.getenv("MINIMAX_API_KEY")
+                end,
+            },
+            schema = {
+                model = {
+                    default = model,
+                    choices = {
+                        [model] = { opts = { can_reason = false }},
+                    }
+                },
+                think = {
+                    default = false,
+                }
+            },
+        })
+    end
+end
+
 -- 硅基流动适配器工厂函数
 local function siliconflow_adapter(name, model, can_reason)
     return function()
@@ -129,6 +155,7 @@ return {
                         })
                     end,
 
+                    minimax_m2 = minimax_adapter("minimax_m2", "MiniMax-M2", false),
                     siliconflow_deepseek = siliconflow_adapter("siliconflow_deepseek", "Pro/deepseek-ai/DeepSeek-V3.1", true),
                     siliconflow_deepseek_r = siliconflow_adapter("siliconflow_deepseek_r", "Pro/deepseek-ai/DeepSeek-R1", true),
                     siliconflow_qwen3 = siliconflow_adapter("siliconflow_qwen3", "Qwen/Qwen3-235B-A22B", false),
@@ -160,7 +187,8 @@ return {
             },
 
             strategies = {
-                chat = {adapter = "siliconflow_deepseek"},
+                -- chat = {adapter = "siliconflow_deepseek"},
+                chat = {adapter = "minimax_m2"},
                 inline = {adapter = "siliconflow_qwen3_coder"}
             },
 
