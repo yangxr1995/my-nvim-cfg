@@ -65,17 +65,9 @@ local function text_to_speech()
 
     local voice = "zh-TW-HsiaoChenNeural"
 
-    -- print("audio_file : ", audio_file);
-    -- 使用 edge-tts 将文本转换为 MP3，并调整速度
-    local cmd = string.format(
-        'edge-tts --text "%s" --write-media %s --rate=%s --voice=%s',
-        text,
-        audio_file,
-        config.rate,
-        voice
-    )
+    local cmd = string.format('tts.py --txt "%s" --output "%s"', text, audio_file)
 
-    -- 异步执行 edge-tts 命令
+    -- 异步执行 cmd 命令
     vim.fn.jobstart(cmd, {
         on_exit = function(_, exit_code)
             if exit_code == 0 then

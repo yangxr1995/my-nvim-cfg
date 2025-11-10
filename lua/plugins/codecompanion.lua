@@ -18,12 +18,12 @@ end
 -- minimax
 local function minimax_adapter(name, model, can_reason)
     return function()
-        return require("codecompanion.adapters").extend("deepseek", {
+        return require("codecompanion.adapters").extend("openai_compatible", {
             name = name,
             url = "https://api.minimaxi.com/v1/chat/completions",
             env = {
                 api_key = function()
-                    return os.getenv("MINIMAX_API_KEY")
+                    return os.getenv("MINIMAXI_API_KEY")
                 end,
             },
             schema = {
@@ -155,7 +155,7 @@ return {
                         })
                     end,
 
-                    minimax_m2 = minimax_adapter("minimax_m2", "MiniMax-M2", false),
+                    minimax_m2 = minimax_adapter("minimax_m2", "MiniMax-M2", true),
                     siliconflow_deepseek = siliconflow_adapter("siliconflow_deepseek", "Pro/deepseek-ai/DeepSeek-V3.1", true),
                     siliconflow_deepseek_r = siliconflow_adapter("siliconflow_deepseek_r", "Pro/deepseek-ai/DeepSeek-R1", true),
                     siliconflow_qwen3 = siliconflow_adapter("siliconflow_qwen3", "Qwen/Qwen3-235B-A22B", false),
