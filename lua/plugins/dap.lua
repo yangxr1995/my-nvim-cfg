@@ -48,7 +48,7 @@ return {
                 type = "executable",
                 command = "gdb-multiarch",
                 args = { "--interpreter=dap",
-                        "--eval-command", "set-architecture aarch64",
+                        "--eval-command", "set architecture aarch64",
                         "--eval-command", "set print pretty on",
                 }
             }
@@ -61,7 +61,15 @@ return {
                     program = function()
                         return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
                     end,
-                    args = {}, -- provide arguments if needed
+                    args = function()
+                        local input = vim.fn.input('Command line arguments: ')
+                        -- 将输入的字符串分割成参数数组
+                        local args = {}
+                        for arg in string.gmatch(input, "%S+") do
+                            table.insert(args, arg)
+                        end
+                        return args
+                    end,
                     cwd = "${workspaceFolder}",
                     stopAtBeginningOfMainSubprogram = false,
                 },

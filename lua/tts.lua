@@ -65,7 +65,7 @@ local function text_to_speech()
 
     local voice = "zh-TW-HsiaoChenNeural"
 
-    local cmd = string.format('tts.py --txt "%s" --output "%s"', text, audio_file)
+    local cmd = string.format('tts.py --txt "%s" --output "%s" --speed 1.3 --voice_id female-tianmei', text, audio_file)
 
     -- 异步执行 cmd 命令
     vim.fn.jobstart(cmd, {

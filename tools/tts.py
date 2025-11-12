@@ -8,7 +8,7 @@ import os
 
 # Minimaxi TTS API配置
 API_URL = "https://api.minimaxi.com/v1/t2a_v2"
-DEFAULT_MODEL = "speech-2.6-hd"
+DEFAULT_MODEL = "speech-2.6-turbo"
 DEFAULT_VOICE_ID = "male-qn-qingse"
 
 def hex_to_binary(hex_string):
@@ -18,16 +18,17 @@ def hex_to_binary(hex_string):
     except ValueError as e:
         raise ValueError(f"无效的十六进制字符串: {e}")
 
-def tts_synthesis(api_key, text, output_file, model=DEFAULT_MODEL, voice_id=DEFAULT_VOICE_ID):
+def tts_synthesis(api_key, text, output_file, model=DEFAULT_MODEL, voice_id=DEFAULT_VOICE_ID, speed=1.0):
     """
     使用Minimaxi API进行语音合成
-    
+
     Args:
         api_key: API密钥
         text: 要合成的文本
         output_file: 输出文件路径
         model: 模型版本
         voice_id: 音色ID
+        speed: 语音速度 (0.5-2.0)
     """
     
     # 构建请求头
@@ -43,7 +44,7 @@ def tts_synthesis(api_key, text, output_file, model=DEFAULT_MODEL, voice_id=DEFA
         "stream": False,
         "voice_setting": {
             "voice_id": voice_id,
-            "speed": 1.0,
+            "speed": speed,
             "vol": 1.0,
             "pitch": 0
         },
@@ -103,6 +104,7 @@ def main():
     parser.add_argument("--api_key", help="Minimaxi API密钥 (也可通过MINIMAXI_API_KEY环境变量设置)")
     parser.add_argument("--model", default=DEFAULT_MODEL, help=f"模型版本 (默认: {DEFAULT_MODEL})")
     parser.add_argument("--voice_id", default=DEFAULT_VOICE_ID, help=f"音色ID (默认: {DEFAULT_VOICE_ID})")
+    parser.add_argument("--speed", type=float, default=1.0, help="语音速度，范围 0.5-2.0 (默认: 1.0)")
     
     args = parser.parse_args()
     
@@ -115,6 +117,11 @@ def main():
     # 检查文本长度
     if len(args.txt) >= 10000:
         print("警告: 文本长度超过10000字符限制，可能会导致API调用失败", file=sys.stderr)
+
+    # 验证速度参数
+    if args.speed < 0.5 or args.speed > 2.0:
+        print("错误: speed 参数必须在 0.5-2.0 范围内", file=sys.stderr)
+        sys.exit(1)
     
     try:
         tts_synthesis(
@@ -122,7 +129,8 @@ def main():
             text=args.txt,
             output_file=args.output,
             model=args.model,
-            voice_id=args.voice_id
+            voice_id=args.voice_id,
+            speed=args.speed
         )
     except Exception as e:
         print(f"错误: {e}", file=sys.stderr)
