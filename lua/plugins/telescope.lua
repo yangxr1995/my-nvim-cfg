@@ -6,6 +6,52 @@ local live_grep_c = function()
   })
 end
 
+-- 函数封装：读取搜索目录配置并执行文件搜索
+local function find_files_with_config()
+    -- 默认搜索目录
+    local default_dirs = {'./'}
+    local search_dirs = default_dirs
+    
+    -- 配置文件路径
+    local config_file = "./find_files"
+    
+    -- 读取配置文件
+    local ok, file = pcall(io.open, config_file, "r")
+    if file then
+
+        print("have find_files")
+        local content = file:read("*all")
+        file:close()
+
+        -- 尝试解析JSON格式
+        local success, data = pcall(vim.json.decode, content)
+        if success and type(data) == "table" and data.search_dirs then
+            search_dirs = data.search_dirs
+        else
+            -- 如果不是JSON，尝试按行解析
+            search_dirs = {}
+            for line in content:gmatch("[^\r\n]+") do
+                line = line:match("^%s*(.-)%s*$") -- 去除首尾空格
+                print("line: " .. line)
+                if line ~= "" and line:sub(1, 1) ~= "#" then -- 忽略空行和注释
+                    table.insert(search_dirs, line)
+                end
+            end
+            -- 如果解析后为空，使用默认目录
+            if #search_dirs == 0 then
+                search_dirs = default_dirs
+            end
+        end
+    else
+        print("打开配置文件失败: " .. config_file)
+    end
+
+    -- 执行文件搜索
+    require('telescope.builtin').find_files({
+        search_dirs = search_dirs
+    })
+end
+
 local live_grep_gtags = function()
   -- 首先读取 gtags-list 文件内容
   local file = io.open("gtags-list", "r")
@@ -43,7 +89,8 @@ return {
             { 'rra', function() require('telescope.builtin').live_grep() end ,  desc = "live grep"  },
             { 'rrc', live_grep_c ,  desc = "live grep C/Cpp"  },
             { 'rrg', live_grep_gtags ,  desc = "live grep gtags"  },
-            { 'rf', function() require('telescope.builtin').find_files() end ,  desc = "find files"  },
+            { 'rfa', function() require('telescope.builtin').find_files() end ,  desc = "find files all"  },
+            { 'rff', find_files_with_config, desc = "find files with filter" },
             { 'rs', function() require('telescope.builtin').lsp_dynamic_workspace_symbols() end ,  desc = "find lsp symbols"  },
         },
         lazy = true,
