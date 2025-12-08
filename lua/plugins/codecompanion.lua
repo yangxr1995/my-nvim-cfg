@@ -41,6 +41,33 @@ local function minimax_adapter(name, model, can_reason)
     end
 end
 
+local function deepseek_adapter(name, model, can_reason)
+    return function()
+        return require("codecompanion.adapters").extend("deepseek", {
+            name = name,
+            url = "https://api.deepseek.com/chat/completions",
+            env = {
+                api_key = function()
+                    return os.getenv("DEEPSEEK_API_KEY")
+                end,
+            },
+            schema = {
+                model = {
+                    default = model,
+                    choices = {
+                        [model] = { opts = { can_reason = false }},
+                    }
+                },
+                think = {
+                    default = false,
+                }
+            },
+        })
+    end
+end
+
+
+
 -- 硅基流动适配器工厂函数
 local function siliconflow_adapter(name, model, can_reason)
     return function()
@@ -163,7 +190,7 @@ return {
                     siliconflow_qwen3_8b = siliconflow_adapter("siliconflow_qwen3_8b", "Qwen/Qwen3-8B", false),
                     siliconflow_glm_z1_9b = siliconflow_adapter("siliconflow_glm_z1_9b", "THUDM/GLM-Z1-9B-0414", false),
                     siliconflow_glm_32b = siliconflow_adapter("siliconflow_glm_32b", "THUDM/GLM-4-32B-0414", false),
-
+                    deepseek_deepseek = deepseek_adapter("deepseek", "deepseek-chat", false),
 
                     ollama = function()
                         return require("codecompanion.adapters").extend("openai_compatible", {
@@ -188,8 +215,10 @@ return {
 
             strategies = {
                 -- chat = {adapter = "siliconflow_deepseek"},
-                chat = {adapter = "minimax_m2"},
-                inline = {adapter = "siliconflow_qwen3_coder"}
+                -- chat = {adapter = "minimax_m2"},
+                -- inline = {adapter = "siliconflow_qwen3_coder"}
+                chat = {adapter = "deepseek"},
+                inline = {adapter = "deepseek"}
             },
 
             prompt_library = {
