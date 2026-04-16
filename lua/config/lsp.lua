@@ -34,6 +34,19 @@ vim.api.nvim_create_autocmd('LspAttach', {
             vim.diagnostic.open_float { source = true }
         end, { buffer = event.buf, desc = 'LSP: List Diagnostic' })
 
+        -- 批量修复当前文件的所有 LSP 诊断问题
+        -- vim.keymap.set('n', '<space>cf', function()
+        --     -- 触发所有可自动修复的 code action
+        --     vim.lsp.buf.code_action({
+        --         apply = true, -- 自动应用修复，无需手动选择
+        --         filter = function(action)
+        --             -- 只筛选「快速修复」类的 action（排除重构等非修复操作）
+        --             return action.kind == 'quickfix' or action.kind == 'source.fixAll'
+        --         end
+        --     })
+        --     print('已自动修复当前文件的所有可修复问题')
+        -- end, { desc = 'LSP: 一键修复当前文件所有问题' })
+
         -- 显示/隐藏诊断信息
         vim.keymap.set(
             'n',

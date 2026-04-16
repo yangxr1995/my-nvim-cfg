@@ -33,9 +33,19 @@ local options = {
     scrolloff = 8,                           -- is one of my fav
     sidescrolloff = 8,
     laststatus = 3,                          -- always show the status line
+    foldenable = true,
+    foldmethod = "expr",                -- 使用表达式进行折叠
+    foldexpr = "nvim_treesitter#foldexpr()", -- 指定折叠表达式为 Tree-sitter 函数
+    foldlevel = 99,                     -- 默认打开所有折叠（推荐：文件打开时全部展开）
+    foldcolumn = "1",                   -- 在左侧显示一列来表示折叠（可选，设为"0"则不显示）
 }
 
 vim.opt.shortmess:append "c"
+
+-- 允许加载项目本地 .nvim.lua 配置
+vim.opt.exrc = true
+-- 安全信任本地配置（个人开发必开）
+vim.opt.secure = true
 
 for k, v in pairs(options) do
     vim.opt[k] = v
