@@ -14,7 +14,11 @@ return  {
 	{
 		'saghen/blink.cmp',
 		event = {'BufReadPost', 'BufNewFile'},
-		dependencies = {{ 'rafamadriz/friendly-snippets' }, {'xzbdmw/colorful-menu.nvim', opts = {} }},
+		dependencies = {
+            { 'rafamadriz/friendly-snippets' },
+            {'xzbdmw/colorful-menu.nvim', opts = {} },
+            { "huijiro/blink-cmp-supermaven"},
+        },
 
 		version = '1.6',
 		opts = {
@@ -93,7 +97,7 @@ return  {
 		},
 
 		sources = {
-			default = { "lazydev", "path", "snippets", "buffer", "lsp" },
+			default = { "supermaven", "lazydev", "path", "snippets", "buffer", "lsp" },
 			providers = {
 				lazydev = {
 					name = "LazyDev",
@@ -112,6 +116,12 @@ return  {
                 lsp = {
                     score_offset = 6,
                 },
+                supermaven = {
+                    score_offset = 5,
+                    name = 'supermaven',
+                    module = "blink-cmp-supermaven",
+                    async = true
+                }
 			},
 		},
 
