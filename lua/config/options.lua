@@ -62,4 +62,4 @@ vim.opt.virtualedit = "block"
 -- vim.opt.signcolumn = "no"
 
 
--- vim.cmd.colorscheme('sonokai')
+-- vim.cmd.colorscheme('catppuccin-mocha')

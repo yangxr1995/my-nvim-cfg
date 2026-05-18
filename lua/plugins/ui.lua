@@ -125,9 +125,9 @@ return {
     {
         'lunarvim/darkplus.nvim',
         -- event = {"VeryLazy"},
-        config = function()
-            vim.cmd.colorscheme('darkplus')
-        end
+        -- config = function()
+        --     vim.cmd.colorscheme('darkplus')
+        -- end
     },
     {
         "lukas-reineke/indent-blankline.nvim",

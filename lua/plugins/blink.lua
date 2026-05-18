@@ -102,16 +102,16 @@ return  {
 				lazydev = {
 					name = "LazyDev",
 					module = "lazydev.integrations.blink",
-					score_offset = 3,
+					score_offset = 1,
 				},
                 path = {
-                    score_offset = 1,
-                },
-                snippets = {
                     score_offset = 4,
                 },
-                buffer = {
+                snippets = {
                     score_offset = 2,
+                },
+                buffer = {
+                    score_offset = 3,
                 },
                 lsp = {
                     score_offset = 6,
