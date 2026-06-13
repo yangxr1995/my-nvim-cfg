@@ -19,7 +19,7 @@ return {
             { "<leader>dO", function() require("dap").step_out() end, desc = "出函数" },
             { "<leader>dC", function() require("dap").continue() end, desc = "继续运行" },
 
-            { "<leader>da", function() require("dap").continue({ before = get_args }) end, desc = "Run with Args" },
+
             { "<leader>dg", function() require("dap").goto_() end, desc = "Go to Line (No Execute)" },
 
             { "<leader>dj", function() require("dap").down() end, desc = "切换到下一个breakpoint" },
@@ -224,13 +224,12 @@ return {
         "nvim-telescope/telescope-dap.nvim",
         dependencies = { "mfussenegger/nvim-dap" },
         keys = {
-            { '<F5>', function() require 'telescope'.extensions.dap.configurations {} end, { desc = "开始调试" } },
             { "<leader>dtb", function() require("telescope").extensions.dap.list_breakpoints {} end, {desc = "查看断点"} },
             { "<leader>dtv", function() require("telescope").extensions.dap.variables {} end, {desc = "查看变量"} },
             { "<leader>dtf", function() require("telescope").extensions.dap.frames {} end, {desc = "查看栈"} },
         },
         config = function()
-            require("telescope").setup()
+            require("telescope").load_extension("dap")
         end
     }
 }

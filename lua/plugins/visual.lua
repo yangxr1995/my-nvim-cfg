@@ -68,9 +68,10 @@ return {
         config = function()
             local status_ok, goto_pre = pcall(require, "goto-preview")
             if not status_ok then
-                print("goto-preview 不存在")
                 return
             end
+
+            local themes_ok, themes = pcall(require, "telescope.themes")
 
             goto_pre.setup {
                 width = 120,
@@ -83,7 +84,7 @@ return {
                 post_open_hook = nil,
                 post_close_hook = nil,
                 references = {
-                    telescope = require("telescope.themes").get_dropdown({ hide_preview = false })
+                    telescope = themes_ok and themes.get_dropdown({ hide_preview = false }) or nil,
                 },
                 focus_on_open = true,
                 dismiss_on_move = false,
