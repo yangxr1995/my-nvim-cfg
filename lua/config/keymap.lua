@@ -41,7 +41,7 @@ keymap("x", "<A-j>", ":move '>+1<CR>gv-gv", { noremap = true, silent = true, des
 keymap("x", "<A-k>", ":move '<-2<CR>gv-gv", { noremap = true, silent = true, desc = "文本块移动" })
 
 -- quickfix
-keymap("n", "cc", ":ccl<CR>", { noremap = true, silent = true, desc = "关闭quickfix" })
+keymap("n", "<leader>cq", ":ccl<CR>", { noremap = true, silent = true, desc = "关闭quickfix" })
 
 -- Terminal --
 -- commandline 提示切换
