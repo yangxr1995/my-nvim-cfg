@@ -43,7 +43,18 @@ return {
             },
         })
 
-        -- LspAttach 回调：仅在使用 lspconfig 时生效
+        local diag_enabled = true
+        vim.keymap.set('n', '<leader>td', function()
+            diag_enabled = not diag_enabled
+            vim.diagnostic.config {
+                underline = diag_enabled,
+                virtual_text = diag_enabled,
+                signs = diag_enabled,
+                update_in_insert = diag_enabled,
+            }
+        end, { desc = 'LSP: 切换诊断显示' })
+
+        -- LspAttach 回调
         vim.api.nvim_create_autocmd('LspAttach', {
             group = vim.api.nvim_create_augroup('lsp-attach', { clear = true }),
             callback = function(event)
@@ -53,20 +64,6 @@ return {
                 vim.keymap.set('n', '<leader>ld', function()
                     vim.diagnostic.open_float { source = true }
                 end, { buffer = event.buf, desc = 'LSP: 显示诊断' })
-
-                -- 切换诊断显示
-                vim.keymap.set('n', '<leader>td', (function()
-                    local diag_status = 1
-                    return function()
-                        if diag_status == 1 then
-                            diag_status = 0
-                            vim.diagnostic.config { underline = false, virtual_text = false, signs = false, update_in_insert = false }
-                        else
-                            diag_status = 1
-                            vim.diagnostic.config { underline = true, virtual_text = true, signs = true, update_in_insert = true }
-                        end
-                    end
-                end)(), { buffer = event.buf, desc = 'LSP: 切换诊断显示' })
 
                 -- LSP 折叠
                 if client and client:supports_method 'textDocument/foldingRange' then
