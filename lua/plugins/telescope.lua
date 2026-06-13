@@ -99,9 +99,6 @@ return {
             local telescope = require("telescope")
             local actions = require("telescope.actions")
 
-            telescope.load_extension('media_files')
-            telescope.setup {}
-
             telescope.setup {
                 defaults = {
                   layout_strategy = 'cursor',
@@ -191,9 +188,9 @@ return {
                         case_mode = "smart_case",       -- or "ignore_case" or "respect_case"
                     }
                 },
-
-
             }
+
+            telescope.load_extension('media_files')
         end
     },
     {
