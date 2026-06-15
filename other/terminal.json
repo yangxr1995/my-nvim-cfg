@@ -1,0 +1,430 @@
+{
+    "$help": "https://aka.ms/terminal-documentation",
+    "$schema": "https://aka.ms/terminal-profiles-schema",
+    "actions": 
+    [
+        {
+            "command": 
+            {
+                "action": "sendInput",
+                "input": "\u00145"
+            },
+            "id": "User.sendInput.A671AAF"
+        },
+        {
+            "command": "paste",
+            "id": "User.paste"
+        },
+        {
+            "command": 
+            {
+                "action": "prevTab"
+            },
+            "id": "User.prevTab.0"
+        },
+        {
+            "command": 
+            {
+                "action": "openSettings",
+                "target": "settingsFile"
+            },
+            "id": "User.openSettings.D3F0B923"
+        },
+        {
+            "command": 
+            {
+                "action": "sendInput",
+                "input": "\u00141"
+            },
+            "id": "User.sendInput.8F0F8EF8"
+        },
+        {
+            "command": 
+            {
+                "action": "sendInput",
+                "input": "\u00143"
+            },
+            "id": "User.sendInput.D08F824F"
+        },
+        {
+            "command": 
+            {
+                "action": "sendInput",
+                "input": "\u00142"
+            },
+            "id": "User.sendInput.854FBE7E"
+        },
+        {
+            "command": 
+            {
+                "action": "sendInput",
+                "input": "\u00144"
+            },
+            "id": "User.sendInput.3CC58928"
+        },
+        {
+            "command": 
+            {
+                "action": "sendInput",
+                "input": "\u00149"
+            },
+            "id": "User.sendInput.AB0866CB"
+        },
+        {
+            "command": 
+            {
+                "action": "sendInput",
+                "input": "\u00146"
+            },
+            "id": "User.sendInput.25EF7F87"
+        },
+        {
+            "command": 
+            {
+                "action": "sendInput",
+                "input": "\u00147"
+            },
+            "id": "User.sendInput.9A9F887A"
+        },
+        {
+            "command": 
+            {
+                "action": "sendInput",
+                "input": "\u00148"
+            },
+            "id": "User.sendInput.4CB826A3"
+        },
+        {
+            "command": 
+            {
+                "action": "sendInput",
+                "input": "\u00140"
+            },
+            "id": "User.sendInput.AE0C6C06"
+        }
+    ],
+    "copyFormatting": "none",
+    "copyOnSelect": false,
+    "defaultProfile": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
+    "focusFollowMouse": true,
+    "keybindings": 
+    [
+        {
+            "id": null,
+            "keys": "ctrl+alt+1"
+        },
+        {
+            "id": null,
+            "keys": "alt+shift+left"
+        },
+        {
+            "id": "User.sendInput.25EF7F87",
+            "keys": "alt+6"
+        },
+        {
+            "id": null,
+            "keys": "alt+f4"
+        },
+        {
+            "id": "User.sendInput.8F0F8EF8",
+            "keys": "alt+1"
+        },
+        {
+            "id": "User.sendInput.D08F824F",
+            "keys": "alt+3"
+        },
+        {
+            "id": null,
+            "keys": "alt+left"
+        },
+        {
+            "id": "User.sendInput.854FBE7E",
+            "keys": "alt+2"
+        },
+        {
+            "id": "User.sendInput.A671AAF",
+            "keys": "alt+5"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+shift+period"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+numpad0"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+shift+pgup"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+shift+pgdn"
+        },
+        {
+            "id": "User.sendInput.3CC58928",
+            "keys": "alt+4"
+        },
+        {
+            "id": "User.sendInput.9A9F887A",
+            "keys": "alt+7"
+        },
+        {
+            "id": "User.sendInput.4CB826A3",
+            "keys": "alt+8"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+shift+8"
+        },
+        {
+            "id": "User.sendInput.AB0866CB",
+            "keys": "alt+9"
+        },
+        {
+            "id": "User.paste",
+            "keys": "shift+insert"
+        },
+        {
+            "id": "User.sendInput.AE0C6C06",
+            "keys": "alt+0"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+tab"
+        },
+        {
+            "id": null,
+            "keys": "alt+shift+down"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+shift+tab"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+shift+d"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+shift+w"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+shift+f"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+alt+9"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+alt+2"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+alt+3"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+alt+4"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+alt+7"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+shift+n"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+alt+5"
+        },
+        {
+            "id": null,
+            "keys": "alt+shift+right"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+alt+6"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+alt+8"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+shift+v"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+shift+p"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+shift+m"
+        },
+        {
+            "id": null,
+            "keys": "alt+up"
+        },
+        {
+            "id": null,
+            "keys": "alt+down"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+shift+4"
+        },
+        {
+            "id": null,
+            "keys": "alt+right"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+numpad_minus"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+shift+up"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+shift+down"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+numpad_plus"
+        },
+        {
+            "id": null,
+            "keys": "enter"
+        },
+        {
+            "id": null,
+            "keys": "alt+shift+minus"
+        },
+        {
+            "id": null,
+            "keys": "alt+shift+plus"
+        },
+        {
+            "id": null,
+            "keys": "alt+space"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+alt+left"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+shift+space"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+shift+comma"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+shift+5"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+shift+2"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+alt+comma"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+shift+1"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+shift+3"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+shift+6"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+shift+7"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+shift+home"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+shift+9"
+        },
+        {
+            "id": null,
+            "keys": "win+sc(41)"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+shift+a"
+        },
+        {
+            "id": null,
+            "keys": "menu"
+        },
+        {
+            "id": null,
+            "keys": "ctrl+shift+end"
+        },
+        {
+            "id": null,
+            "keys": "alt+shift+up"
+        },
+        {
+            "id": "User.openSettings.D3F0B923",
+            "keys": "ctrl+period"
+        }
+    ],
+    "newTabMenu": 
+    [
+        {
+            "type": "remainingProfiles"
+        }
+    ],
+    "profiles": 
+    {
+        "defaults": 
+        {
+            "colorScheme": "One Half Dark",
+            "font": 
+            {
+                "face": "JetBrainsMono Nerd Font"
+            }
+        },
+        "list": 
+        [
+            {
+                "commandline": "%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+                "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
+                "hidden": false,
+                "name": "Windows PowerShell"
+            },
+            {
+                "commandline": "%SystemRoot%\\System32\\cmd.exe",
+                "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
+                "hidden": false,
+                "name": "\u547d\u4ee4\u63d0\u793a\u7b26"
+            },
+            {
+                "guid": "{b453ae62-4e3d-5e58-b989-0a998ec441b8}",
+                "hidden": false,
+                "name": "Azure Cloud Shell",
+                "source": "Windows.Terminal.Azure"
+            }
+        ]
+    },
+    "schemes": [],
+    "themes": [],
+    "useAcrylicInTabRow": false
+}
