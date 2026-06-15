@@ -15,10 +15,7 @@ local term_opts = { silent = true }
 -- Shorten function name
 local keymap = vim.api.nvim_set_keymap
 
-keymap("n", "<C-h>", "<C-w>h", { noremap = true, silent = true, desc = "切换窗口h" })
-keymap("n", "<C-j>", "<C-w>j", { noremap = true, silent = true, desc = "切换窗口j" })
-keymap("n", "<C-k>", "<C-w>k", { noremap = true, silent = true, desc = "切换窗口k" })
-keymap("n", "<C-l>", "<C-w>l", { noremap = true, silent = true, desc = "切换窗口l" })
+-- Window/Pane navigation handled by smart-splits.nvim (see plugins/tmux.lua)
 
 -- Resize with arrows
 keymap("n", "<C-Up>", ":resize -2<CR>", { noremap = true, silent = true, desc = "调整窗口大小" })
@@ -43,12 +40,7 @@ keymap("x", "<A-k>", ":move '<-2<CR>gv-gv", { noremap = true, silent = true, des
 -- quickfix
 keymap("n", "<leader>cq", ":ccl<CR>", { noremap = true, silent = true, desc = "关闭quickfix" })
 
--- Terminal --
--- commandline 提示切换
-keymap("t", "<C-h>", "<C-\\><C-N><C-w>h", term_opts)
-keymap("t", "<C-j>", "<C-\\><C-N><C-w>j", term_opts)
-keymap("t", "<C-k>", "<C-\\><C-N><C-w>k", term_opts)
-keymap("t", "<C-l>", "<C-\\><C-N><C-w>l", term_opts)
+-- Terminal mode navigation handled by smart-splits.nvim (see plugins/tmux.lua)
 
 
 -- high light
