@@ -17,6 +17,8 @@ return {
                 return
             end
             gtags.setAutoIncUpdate(true)
+            -- Initialize stack_view with default options
+            gtags.setup({ stack_view = { tree_hl = true, size = "medium" } })
         end,
     },
 }
