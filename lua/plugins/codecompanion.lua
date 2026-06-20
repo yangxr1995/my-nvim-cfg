@@ -38,11 +38,62 @@ end
 local function translate_selection()
     local text = get_visual_selection()
     if not text or text == '' then return end
+    local api_key = os.getenv("DEEPSEEK_API_KEY")
+    if not api_key or api_key == '' then
+        print("DEEPSEEK_API_KEY 未设置")
+        return
+    end
+
     local prompt = "将以下文本翻译为中文，直接给出翻译结果不要解释：\n\n" .. text
-    require("codecompanion").chat({
-        user_prompt = prompt,
-        auto_submit = true,
+    local payload = vim.json.encode({
+        model = "deepseek-v4-flash",
+        messages = { { role = "user", content = prompt } },
+        stream = false,
     })
+
+    local result = vim.fn.system({
+        "curl", "-s",
+        "-H", "Content-Type: application/json",
+        "-H", "Authorization: Bearer " .. api_key,
+        "-d", payload,
+        "https://api.deepseek.com/chat/completions",
+    })
+    if vim.v.shell_error ~= 0 then
+        print("翻译请求失败: " .. result)
+        return
+    end
+    local ok, resp = pcall(vim.json.decode, result)
+    if not ok or not resp.choices or not resp.choices[1] then
+        print("解析响应失败")
+        return
+    end
+    local translation = resp.choices[1].message.content
+    if not translation or translation == '' then
+        print("未获取到翻译结果")
+        return
+    end
+
+    local lines = vim.split(translation, '\n', { plain = true })
+    local buf = vim.api.nvim_create_buf(false, true)
+    vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+    vim.bo[buf].filetype = "markdown"
+
+    local width = math.min(80, vim.o.columns - 8)
+    local height = math.min(#lines + 2, vim.o.lines - 8)
+    local win = vim.api.nvim_open_win(buf, true, {
+        relative = "editor",
+        width = width,
+        height = height,
+        col = math.floor((vim.o.columns - width) / 2),
+        row = math.floor((vim.o.lines - height) / 2),
+        border = "rounded",
+        style = "minimal",
+        title = " 翻译结果 ",
+        title_pos = "center",
+    })
+    vim.wo[win].wrap = true
+    vim.keymap.set("n", "q", function() pcall(vim.api.nvim_win_close, win, true) end, { buffer = buf, nowait = true })
+    vim.keymap.set("n", "<esc>", function() pcall(vim.api.nvim_win_close, win, true) end, { buffer = buf, nowait = true })
 end
 
 return {
