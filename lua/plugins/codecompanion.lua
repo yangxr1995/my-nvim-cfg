@@ -127,8 +127,8 @@ return {
         { "<leader>ct", "<cmd>CodeCompanionChat Toggle<cr>", mode = { "n", "v" }, desc = "切换聊天" },
         { "<leader>ci", "<cmd>CodeCompanion<cr>", mode = "n", desc = "内联对话" },
         { "ga", "<cmd>CodeCompanionChat Add<cr>", mode = "v", desc = "添加到聊天" },
-        { "<leader>cT", translate_to_chinese, mode = "v", desc = "翻译为中文" },
-        { "<leader>ce", translate_to_english, mode = "v", desc = "翻译为英文" },
+        { "<leader>cTc", translate_to_chinese, mode = "v", desc = "翻译为中文" },
+        { "<leader>cTe", translate_to_english, mode = "v", desc = "翻译为英文" },
     },
     config = function()
         local ret, CCFidgeHooks = pcall(require, "CCFidgeHooks")
