@@ -35,16 +35,20 @@ local function get_visual_selection()
     return text
 end
 
-local function translate_selection()
-    local text = get_visual_selection()
-    if not text or text == '' then return end
+local function call_deepseek_translate(text, target_lang, window_title)
     local api_key = os.getenv("DEEPSEEK_API_KEY")
     if not api_key or api_key == '' then
         print("DEEPSEEK_API_KEY 未设置")
         return
     end
 
-    local prompt = "将以下文本翻译为中文，直接给出翻译结果不要解释：\n\n" .. text
+    local prompt
+    if target_lang == "en" then
+        prompt = "Translate the following text into English. Output the translation directly without any explanation:\n\n" .. text
+    else
+        prompt = "将以下文本翻译为中文，直接给出翻译结果不要解释：\n\n" .. text
+    end
+
     local payload = vim.json.encode({
         model = "deepseek-v4-flash",
         messages = { { role = "user", content = prompt } },
@@ -88,12 +92,24 @@ local function translate_selection()
         row = math.floor((vim.o.lines - height) / 2),
         border = "rounded",
         style = "minimal",
-        title = " 翻译结果 ",
+        title = " " .. window_title .. " ",
         title_pos = "center",
     })
     vim.wo[win].wrap = true
     vim.keymap.set("n", "q", function() pcall(vim.api.nvim_win_close, win, true) end, { buffer = buf, nowait = true })
     vim.keymap.set("n", "<esc>", function() pcall(vim.api.nvim_win_close, win, true) end, { buffer = buf, nowait = true })
+end
+
+local function translate_to_chinese()
+    local text = get_visual_selection()
+    if not text or text == '' then return end
+    call_deepseek_translate(text, "zh", "翻译结果")
+end
+
+local function translate_to_english()
+    local text = get_visual_selection()
+    if not text or text == '' then return end
+    call_deepseek_translate(text, "en", "Translation")
 end
 
 return {
@@ -111,7 +127,8 @@ return {
         { "<leader>ct", "<cmd>CodeCompanionChat Toggle<cr>", mode = { "n", "v" }, desc = "切换聊天" },
         { "<leader>ci", "<cmd>CodeCompanion<cr>", mode = "n", desc = "内联对话" },
         { "ga", "<cmd>CodeCompanionChat Add<cr>", mode = "v", desc = "添加到聊天" },
-        { "<leader>cT", translate_selection, mode = "v", desc = "翻译选中文本" },
+        { "<leader>cT", translate_to_chinese, mode = "v", desc = "翻译为中文" },
+        { "<leader>ce", translate_to_english, mode = "v", desc = "翻译为英文" },
     },
     config = function()
         local ret, CCFidgeHooks = pcall(require, "CCFidgeHooks")
