@@ -153,12 +153,12 @@ return {
             },
             display = {
                 chat = {
-                    window = {
-                        layout = "float",
-                        width = 0.5,
-                        height = 0.75,
-                        border = "single",
-                    },
+                    -- window = {
+                    --     layout = "float",
+                    --     width = 0.5,
+                    --     height = 0.75,
+                    --     border = "single",
+                    -- },
                     show_token_count = true,
                     show_reasoning = true,
                     start_in_insert_mode = false,
