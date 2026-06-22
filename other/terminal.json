@@ -7,7 +7,7 @@
             "command": 
             {
                 "action": "sendInput",
-                "input": "\u00145"
+                "input": "\u001bt5"
             },
             "id": "User.sendInput.A671AAF"
         },
@@ -34,7 +34,7 @@
             "command": 
             {
                 "action": "sendInput",
-                "input": "\u00141"
+                "input": "\u001bt1"
             },
             "id": "User.sendInput.8F0F8EF8"
         },
@@ -42,7 +42,7 @@
             "command": 
             {
                 "action": "sendInput",
-                "input": "\u00143"
+                "input": "\u001bt3"
             },
             "id": "User.sendInput.D08F824F"
         },
@@ -50,7 +50,7 @@
             "command": 
             {
                 "action": "sendInput",
-                "input": "\u00142"
+                "input": "\u001bt2"
             },
             "id": "User.sendInput.854FBE7E"
         },
@@ -58,7 +58,7 @@
             "command": 
             {
                 "action": "sendInput",
-                "input": "\u00144"
+                "input": "\u001bt4"
             },
             "id": "User.sendInput.3CC58928"
         },
@@ -66,7 +66,7 @@
             "command": 
             {
                 "action": "sendInput",
-                "input": "\u00149"
+                "input": "\u001bt9"
             },
             "id": "User.sendInput.AB0866CB"
         },
@@ -74,7 +74,7 @@
             "command": 
             {
                 "action": "sendInput",
-                "input": "\u00146"
+                "input": "\u001bt6"
             },
             "id": "User.sendInput.25EF7F87"
         },
@@ -82,7 +82,7 @@
             "command": 
             {
                 "action": "sendInput",
-                "input": "\u00147"
+                "input": "\u001bt7"
             },
             "id": "User.sendInput.9A9F887A"
         },
@@ -90,7 +90,7 @@
             "command": 
             {
                 "action": "sendInput",
-                "input": "\u00148"
+                "input": "\u001bt8"
             },
             "id": "User.sendInput.4CB826A3"
         },
@@ -98,7 +98,7 @@
             "command": 
             {
                 "action": "sendInput",
-                "input": "\u00140"
+                "input": "\u001bt0"
             },
             "id": "User.sendInput.AE0C6C06"
         }
