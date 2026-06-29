@@ -201,7 +201,7 @@ keybinds clear-defaults=true {
         bind "Alt m" { SwitchToMode "move"; }
     }
     shared_except "locked" "scroll" "search" {
-        bind "Ctrl f" { ToggleFocusFullscreen; }
+        bind "Alt q" { ToggleFocusFullscreen; }
     }
     shared_except "normal" "locked" "entersearch" {
         bind "enter" { SwitchToMode "normal"; }
