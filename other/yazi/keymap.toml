@@ -1,0 +1,6 @@
+[mgr]
+prepend_keymap = [
+	{ on = "q", run = "quit --no-cwd-file", desc = "退出并回到原始目录" },
+	{ on = "Q", run = "quit",               desc = "退出并回到 yazi 当前目录" },
+	{ on = [ "g", "l" ], run = "shell 'lazygit' --block", desc = "启动 lazygit" },
+]
