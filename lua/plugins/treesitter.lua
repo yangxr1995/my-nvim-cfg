@@ -1,6 +1,6 @@
-local config = require "lazy.core.config"
 return {
     "nvim-treesitter/playground",
+    cmd = { "TSPlaygroundToggle", "TSHighlightCapturesUnderCursor" },
     {
         "nvim-treesitter/nvim-treesitter",
         lazy = false,

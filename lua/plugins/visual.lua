@@ -1,6 +1,7 @@
 return {
     {
         "lukas-reineke/indent-blankline.nvim",
+        event = { "BufReadPost", "BufNewFile" },
         main = "ibl",
         opts = function(_, opts)
             return require("indent-rainbowline").make_opts(opts, {
@@ -14,6 +15,7 @@ return {
     },
     {
         'yamatsum/nvim-cursorline',
+        event = "VeryLazy",
         config = function()
             require('nvim-cursorline').setup {
                 cursorline = {

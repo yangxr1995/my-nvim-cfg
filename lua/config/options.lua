@@ -34,7 +34,7 @@ local options = {
     laststatus = 3,                          -- always show the status line
     foldenable = true,
     foldmethod = "expr",                -- 使用表达式进行折叠
-    foldexpr = "nvim_treesitter#foldexpr()", -- 指定折叠表达式为 Tree-sitter 函数
+    foldexpr = "v:lua.vim.treesitter.foldexpr()", -- 指定折叠表达式为 nvim 内建 Tree-sitter 折叠（0.10+）
     foldlevel = 99,                     -- 默认打开所有折叠（推荐：文件打开时全部展开）
     foldcolumn = "1",                   -- 在左侧显示一列来表示折叠（可选，设为"0"则不显示）
 }

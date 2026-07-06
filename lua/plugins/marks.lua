@@ -1,1 +1,1 @@
-return { 'chentoast/marks.nvim', config = true }
+return { 'chentoast/marks.nvim', event = 'BufRead', config = true }

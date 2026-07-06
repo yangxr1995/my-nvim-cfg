@@ -6,6 +6,17 @@ return {
     ---@module 'snacks' <- Loads `snacks.nvim` types for configuration intellisense.
     { "folke/snacks.nvim", opts = { input = {}, picker = {}, terminal = {} } },
   },
+  keys = {
+    { "<leader>oa", function() require("opencode").ask("@this: ", { submit = true }) end, mode = { "n", "x" }, desc = "Ask opencode…" },
+    { "<leader>os", function() require("opencode").select() end,                          mode = { "n", "x" }, desc = "Execute opencode action…" },
+    { "<leader>ot", function() require("opencode").toggle() end,                          mode = { "n", "t" }, desc = "Toggle opencode" },
+    { "go",         function() return require("opencode").operator("@this ") end,         mode = { "n", "x" }, desc = "Add range to opencode", expr = true },
+    { "goo",        function() return require("opencode").operator("@this ") .. "_" end,  mode = "n",          desc = "Add line to opencode",   expr = true },
+    { "<M-u>",      function() require("opencode").command("session.half.page.up") end,   mode = "n",          desc = "Scroll opencode up" },
+    { "<M-d>",      function() require("opencode").command("session.half.page.down") end, mode = "n",          desc = "Scroll opencode down" },
+    { "+",          "<C-a>",                                                               mode = "n",          desc = "Increment under cursor", noremap = true },
+    { "-",          "<C-x>",                                                               mode = "n",          desc = "Decrement under cursor", noremap = true },
+  },
   config = function()
     ---@type opencode.Opts
     vim.g.opencode_opts = {
@@ -14,20 +25,5 @@ return {
 
     -- Required for `opts.events.reload`.
     vim.o.autoread = true
-
-    -- Recommended/example keymaps.
-    vim.keymap.set({ "n", "x" }, "<leader>oa", function() require("opencode").ask("@this: ", { submit = true }) end, { desc = "Ask opencode…" })
-    vim.keymap.set({ "n", "x" }, "<leader>os", function() require("opencode").select() end,                          { desc = "Execute opencode action…" })
-    vim.keymap.set({ "n", "t" }, "<leader>ot", function() require("opencode").toggle() end,                          { desc = "Toggle opencode" })
-
-    vim.keymap.set({ "n", "x" }, "go",  function() return require("opencode").operator("@this ") end,        { desc = "Add range to opencode", expr = true })
-    vim.keymap.set("n",          "goo", function() return require("opencode").operator("@this ") .. "_" end, { desc = "Add line to opencode", expr = true })
-
-    vim.keymap.set("n", "<M-u>", function() require("opencode").command("session.half.page.up") end,   { desc = "Scroll opencode up" })
-    vim.keymap.set("n", "<M-d>", function() require("opencode").command("session.half.page.down") end, { desc = "Scroll opencode down" })
-
-    -- You may want these if you stick with the opinionated "<C-a>" and "<C-x>" above — otherwise consider "<leader>o…".
-    vim.keymap.set("n", "+", "<C-a>", { desc = "Increment under cursor", noremap = true })
-    vim.keymap.set("n", "-", "<C-x>", { desc = "Decrement under cursor", noremap = true })
   end,
 }

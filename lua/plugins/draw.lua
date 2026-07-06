@@ -1,6 +1,9 @@
 return {
     {
         "jbyuki/venn.nvim",
+        keys = {
+            { '<leader>v', function() _G.Toggle_venn() end, desc = 'Toggle Venn drawing mode' },
+        },
         config=function()
             -- venn.nvim: enable or disable keymappings
             function _G.Toggle_venn()
@@ -26,7 +29,6 @@ return {
                 end
             end
             -- toggle keymappings for venn using <leader>v
-            vim.api.nvim_set_keymap('n', '<leader>v', ":lua Toggle_venn()<CR>", { noremap = true})
-        end
+        end,
     },
 }

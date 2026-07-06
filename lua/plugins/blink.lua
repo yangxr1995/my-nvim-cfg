@@ -13,7 +13,7 @@ return  {
 
 	{
 		'saghen/blink.cmp',
-		event = {'BufReadPost', 'BufNewFile'},
+		event = 'InsertEnter',
 		dependencies = {
             { 'rafamadriz/friendly-snippets' },
             {'xzbdmw/colorful-menu.nvim', opts = {} },
