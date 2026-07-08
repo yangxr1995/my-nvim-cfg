@@ -37,8 +37,14 @@ keymap("x", "K", ":move '<-2<CR>gv-gv", { noremap = true, silent = true, desc = 
 keymap("x", "<A-j>", ":move '>+1<CR>gv-gv", { noremap = true, silent = true, desc = "文本块移动" })
 keymap("x", "<A-k>", ":move '<-2<CR>gv-gv", { noremap = true, silent = true, desc = "文本块移动" })
 
--- quickfix
-keymap("n", "<leader>cq", ":ccl<CR>", { noremap = true, silent = true, desc = "关闭quickfix" })
+vim.keymap.set("n", "<leader>cq", function()
+  local qf_win = vim.fn.getqflist({ winid = 0 }).winid
+  if qf_win and qf_win > 0 then
+    vim.cmd("cclose")
+  else
+    vim.cmd("copen")
+  end
+end, { desc = "切换 quickfix 窗口" })
 
 -- Terminal mode navigation handled by smart-splits.nvim (see plugins/tmux.lua)
 
