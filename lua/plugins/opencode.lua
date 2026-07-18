@@ -25,5 +25,20 @@ return {
 
     -- Required for `opts.events.reload`.
     vim.o.autoread = true
+
+    -- Workaround for upstream opencode.nvim bug.
+    -- server/init.lua:349 passes `self.disconnect` (field access, no binding)
+    -- to `vim.schedule_wrap` as the heartbeat timer callback. When the timer
+    -- fires (heartbeat timeout: server gone / killed / network drop), `self`
+    -- is nil and `Server:disconnect()` errors at its first index access.
+    -- Wrap with nil-safe no-op; stays as a harmless no-op once upstream fixes it.
+    local Server = require("opencode.server")
+    local orig_disconnect = Server.disconnect
+    Server.disconnect = function(self, ...)
+      if self == nil then
+        return
+      end
+      return orig_disconnect(self, ...)
+    end
   end,
 }
