@@ -44,6 +44,23 @@ return {
             },
         })
 
+        -- 修复 hover 浮窗残留：内置实现把关闭事件（CursorMoved）绑定在打开浮窗时的
+        -- 源 buffer 上，切换到其他 buffer 后旧浮窗永远不会自动关闭，
+        -- 且在新 buffer 再按 K 会叠加新浮窗（内置按 buffer 号复用/关闭浮窗）。
+        -- 因此进入 buffer 时，主动关闭所有属于其他 buffer 的 hover 浮窗。
+        vim.api.nvim_create_autocmd('BufEnter', {
+            group = vim.api.nvim_create_augroup('hover-float-cleanup', { clear = true }),
+            callback = function(args)
+                for _, win in ipairs(vim.api.nvim_list_wins()) do
+                    local src_buf = vim.w[win]['textDocument/hover']
+                    -- 排除浮窗自身（聚焦浮窗时 BufEnter 的是浮窗自己的 scratch buffer）
+                    if src_buf and src_buf ~= args.buf and vim.api.nvim_win_get_buf(win) ~= args.buf then
+                        vim.api.nvim_win_close(win, true)
+                    end
+                end
+            end,
+        })
+
         local diag_enabled = true
         vim.keymap.set('n', '<leader>td', function()
             diag_enabled = not diag_enabled
