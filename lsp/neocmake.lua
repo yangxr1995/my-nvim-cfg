@@ -1,5 +1,5 @@
 return {
-	cmd = {'neocmakelsp'},
+	cmd = { 'neocmakelsp', 'stdio' },
 	filetypes = { 'cmake' },
 	root_markers = { 'CMakePresets.json', 'CTestConfig.cmake', '.git', 'build', 'cmake' },
 	init_options = {
