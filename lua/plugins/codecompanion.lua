@@ -133,8 +133,9 @@ return {
         local ret, CCFidgeHooks = pcall(require, "CCFidgeHooks")
         if not ret then
             print("cant find CCFidgeHooks")
+        else
+            CCFidgeHooks.init()
         end
-        CCFidgeHooks.init()
 
         require("codecompanion").setup({
             opts = {
