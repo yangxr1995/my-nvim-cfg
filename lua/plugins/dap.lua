@@ -10,7 +10,7 @@ return {
         -- event = {"VeryLazy"},
         keys = {
             { "<leader>d", "", desc = "+debug", mode = { "n", "v" } },
-            { '<F5>', function() require 'telescope'.extensions.dap.configurations {} end, { desc = "开始调试" } },
+            { '<F5>', function() require 'telescope'.extensions.dap.configurations {} end, desc = "开始调试" },
             { "<leader>dB", function() require("dap").set_breakpoint(vim.fn.input('Breakpoint condition: ')) end, desc = "条件断点" },
             { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "添加/删除断点" },
             { "<leader>do", function() require("dap").step_over() end, desc = "单步" },
@@ -224,9 +224,9 @@ return {
         "nvim-telescope/telescope-dap.nvim",
         dependencies = { "mfussenegger/nvim-dap" },
         keys = {
-            { "<leader>dtb", function() require("telescope").extensions.dap.list_breakpoints {} end, {desc = "查看断点"} },
-            { "<leader>dtv", function() require("telescope").extensions.dap.variables {} end, {desc = "查看变量"} },
-            { "<leader>dtf", function() require("telescope").extensions.dap.frames {} end, {desc = "查看栈"} },
+            { "<leader>dtb", function() require("telescope").extensions.dap.list_breakpoints {} end, desc = "查看断点" },
+            { "<leader>dtv", function() require("telescope").extensions.dap.variables {} end, desc = "查看变量" },
+            { "<leader>dtf", function() require("telescope").extensions.dap.frames {} end, desc = "查看栈" },
         },
         config = function()
             require("telescope").load_extension("dap")
