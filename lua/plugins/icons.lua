@@ -14,7 +14,6 @@ return {
                 color_icons = true,
                 default = true,
                 strict = true,
-                variant = "light|dark",
                 override_by_filename = {
                     [".gitignore"] = {
                         icon = "",
