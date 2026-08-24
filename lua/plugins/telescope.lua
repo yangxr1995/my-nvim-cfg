@@ -169,5 +169,6 @@ return {
         })
 
         telescope.load_extension("media_files")
+        telescope.load_extension("fzf")
     end,
 }
