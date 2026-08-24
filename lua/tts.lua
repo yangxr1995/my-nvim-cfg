@@ -15,7 +15,10 @@ end
 local function ensure_mocp_server()
     -- 检查 mocp 服务器是否正在运行
     local check_cmd = "mocp -i > /dev/null 2>&1"
-    local is_running = vim.fn.system(check_cmd) == 0
+    vim.fn.system(check_cmd)
+    -- system() returns command output, NOT exit code; exit code lives in v:shell_error
+    -- (do NOT "simplify" this back to `system(...) == 0`, it is always false)
+    local is_running = vim.v.shell_error == 0
 
     -- 如果未运行，则启动 mocp 服务器
     if not is_running then
