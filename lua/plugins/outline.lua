@@ -4,7 +4,17 @@ return  {
         lazy = true,
         cmd = { "Outline", "OutlineOpen" },
         keys = { -- Example mapping to toggle outline
-            { "<F3>", mode = "n", "<cmd>Outline<CR>", desc = "Toggle outline" },
+            { "<F3>", function()
+                -- md-render's render view is a plain buffer with no outline
+                -- structure; toggle back to source first so the outline
+                -- parses the actual markdown (sessions are kept, <leader>mr
+                -- re-renders afterwards).
+                local state = vim.w.md_render_state
+                if state and state.mode == "render" and state.source_buf and vim.api.nvim_buf_is_valid(state.source_buf) then
+                    require("md-render").preview.toggle()
+                end
+                vim.cmd("Outline")
+            end, desc = "Toggle outline" },
         },
         opts = {
         },
