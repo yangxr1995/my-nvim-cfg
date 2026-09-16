@@ -20,19 +20,47 @@ local function table_expand_state(bufnr)
     return state
 end
 
+-- Rendered views use a dedicated highlight namespace so Bold can be
+-- restyled per window without leaking a global override into source/help
+-- buffers (undefined groups fall back to the global definitions).
+-- BufEnter keeps every window's namespace in sync with the buffer kind,
+-- covering all toggle paths (keymap, :MdRender, auto-mode transitions).
+local render_hl_ns = vim.api.nvim_create_namespace("md-render-style")
+vim.api.nvim_set_hl(render_hl_ns, "Bold", { bold = true, fg = "#fab387" })
+vim.api.nvim_create_autocmd("BufEnter", {
+    callback = function(args)
+        if vim.b[args.buf].md_render then
+            vim.api.nvim_set_hl_ns(render_hl_ns)
+        else
+            vim.api.nvim_set_hl_ns(0)
+        end
+    end,
+})
+
 -- Session.new resets opts.expand_state to its own interactive table,
 -- so tables-expanded-by-default has to be injected after creation.
-local function seed_expanded_tables(preview, bufnr)
+local function decorate_render_buffers(preview, bufnr)
     local seed = table_expand_state(bufnr)
-    if next(seed) == nil then return end
-    local pools = { preview._toggle_sessions, preview._sessions }
-    for _, pool in ipairs(pools) do
+    if vim.b[vim.api.nvim_win_get_buf(0)].md_render then
+        vim.api.nvim_set_hl_ns(render_hl_ns)
+    end
+    local changed = false
+    for _, pool in ipairs({ preview._toggle_sessions, preview._sessions }) do
         for _, session in pairs(pool or {}) do
             if session.source_bufnr == bufnr then
                 for id in pairs(seed) do
-                    session.expand_state[id] = true
+                    if not session.expand_state[id] then
+                        session.expand_state[id] = true
+                        changed = true
+                    end
                 end
-                session:rebuild()
+            end
+        end
+    end
+    if changed then
+        for _, pool in ipairs({ preview._toggle_sessions, preview._sessions }) do
+            for _, session in pairs(pool or {}) do
+                if session.source_bufnr == bufnr then session:rebuild() end
             end
         end
     end
@@ -54,7 +82,7 @@ return {
                     local preview = require("md-render").preview
                     local bufnr = vim.api.nvim_get_current_buf()
                     preview.show({ max_width = render_width() })
-                    seed_expanded_tables(preview, bufnr)
+                    decorate_render_buffers(preview, bufnr)
                 end,
                 desc = "Markdown preview (float toggle)",
             },
@@ -64,11 +92,9 @@ return {
                     local preview = require("md-render").preview
                     local bufnr = vim.api.nvim_get_current_buf()
                     preview.toggle({ max_width = render_width() })
-                    -- Seed only when the window switched to the render view;
-                    -- toggling back leaves the (reused) session untouched.
                     local state = vim.w.md_render_state
                     if state and state.mode == "render" and state.source_buf == bufnr then
-                        seed_expanded_tables(preview, bufnr)
+                        decorate_render_buffers(preview, bufnr)
                     end
                 end,
                 desc = "Markdown render toggle (in-place, source stays editable)",
