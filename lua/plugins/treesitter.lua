@@ -1,50 +1,32 @@
 return {
-    "nvim-treesitter/playground",
-    cmd = { "TSPlaygroundToggle", "TSHighlightCapturesUnderCursor" },
     {
         "nvim-treesitter/nvim-treesitter",
         lazy = false,
         priority = 1000,
         build = ":TSUpdate",
         config = function()
-            require("nvim-treesitter.configs").setup({
-                ensure_installed = {
-                    "bash",
-                    "c",
-                    "cpp",
-                    "lua",
-                    "markdown",
-                    "markdown_inline",
-                    "python",
-                    "vim",
-                    "cmake",
+            -- main branch: install() is async and a no-op for installed parsers;
+            -- parsers go to stdpath("data")/site.
+            require("nvim-treesitter").install({
+                "bash",
+                "c",
+                "cpp",
+                "lua",
+                "markdown",
+                "markdown_inline",
+                "python",
+                "vim",
+                "vimdoc",
+                "cmake",
+            })
 
-                    -- "html",
-                    -- "go",
-                    -- "java",
-                    -- "javascript",
-                    -- "prisma",
-                    -- "query",
-                    -- "typescript",
-                    -- "yaml",
-                },
-                sync_install = true,
-                highlight = {
-                    enable = true,
-                    disable = {}, -- list of language that will be disabled
-                },
-                indent = {
-                    enable = false
-                },
-                incremental_selection = {
-                    enable = true,
-                    keymaps = {
-                        init_selection    = "<c-n>",
-                        node_incremental  = "<c-n>",
-                        node_decremental  = "<c-h>",
-                        scope_incremental = "<c-l>",
-                    },
-                }
+            -- Highlighting is provided by Neovim core via vim.treesitter.start();
+            -- the main-branch rewrite no longer ships a highlight module.
+            vim.api.nvim_create_autocmd("FileType", {
+                pattern = { "bash", "c", "cpp", "lua", "markdown", "python", "vim", "vimdoc", "cmake" },
+                callback = function()
+                    pcall(vim.treesitter.start)
+                end,
             })
         end
     },
