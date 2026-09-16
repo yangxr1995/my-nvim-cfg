@@ -50,7 +50,7 @@ local function call_deepseek_translate(text, target_lang, window_title)
     end
 
     local payload = vim.json.encode({
-        model = "deepseek-v4-flash",
+        model = "deepseek-v4.1-flash",
         messages = { { role = "user", content = prompt } },
         stream = false,
     })
@@ -144,7 +144,7 @@ return {
             },
             adapters = {
                 http = {
-                    deepseek_v4f = deepseek_adapter("deepseek", "deepseek-v4-flash", false),
+                    deepseek_v4f = deepseek_adapter("deepseek", "deepseek-v4.1-flash", false),
                 },
             },
             strategies = {
