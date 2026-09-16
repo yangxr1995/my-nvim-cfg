@@ -79,6 +79,89 @@ return {
             -- lazy.nvim re-triggers FileType after loading via `ft`, so the
             -- autocmd above also covers the buffer that triggered the load.
 
+            -- Pipe-table cells: render <br> as a real line break by splitting
+            -- the row into continuation sub-rows before table rendering. The
+            -- plugin only handles <br> in HTML <dt>/<dd>, not in pipe tables.
+            local md_table = require("md-render.markdown_table")
+            local function split_br_segments(text)
+                local segs = vim.split(text, "<[bB][rR]%s*/?>")
+                while #segs > 1 and segs[1] == "" do table.remove(segs, 1) end
+                while #segs > 1 and segs[#segs] == "" do table.remove(segs) end
+                return segs
+            end
+            local function row_has_br(cells)
+                for _, c in ipairs(cells) do
+                    if c.text and c.text:match("<[bB][rR]%s*/?>") then return true end
+                end
+                return false
+            end
+            local function split_row_cells(cells)
+                local seg_lists, n = {}, 1
+                for col, c in ipairs(cells) do
+                    local segs = split_br_segments(c.text or "")
+                    seg_lists[col] = segs
+                    n = math.max(n, #segs)
+                end
+                local out = {}
+                for k = 1, n do
+                    local row = {}
+                    for col, c in ipairs(cells) do
+                        -- Original highlights/links stay on the first segment
+                        -- (a prefix of the source text, so positions remain
+                        -- valid); continuation cells are plain text.
+                        row[col] = {
+                            text = seg_lists[col][k] or "",
+                            highlights = k == 1 and c.highlights or {},
+                            links = k == 1 and c.links or {},
+                        }
+                    end
+                    out[k] = row
+                end
+                return out
+            end
+            local function expand_table_br(parsed)
+                if not row_has_br(parsed.headers) then
+                    local any = false
+                    for _, row in ipairs(parsed.rows) do
+                        if row_has_br(row) then any = true break end
+                    end
+                    if not any then return parsed end
+                end
+                parsed.headers = (function()
+                    local hs = {}
+                    for col, c in ipairs(parsed.headers) do
+                        hs[col] = {
+                            text = table.concat(split_br_segments(c.text or ""), " "),
+                            highlights = c.highlights,
+                            links = c.links,
+                        }
+                    end
+                    return hs
+                end)()
+                local new_rows = {}
+                for _, row in ipairs(parsed.rows) do
+                    for _, sub in ipairs(split_row_cells(row)) do
+                        new_rows[#new_rows + 1] = sub
+                    end
+                end
+                parsed.rows = new_rows
+                local widths = {}
+                for col in ipairs(parsed.alignments) do
+                    local w = vim.api.nvim_strwidth(parsed.headers[col].text)
+                    for _, row in ipairs(parsed.rows) do
+                        local c = row[col]
+                        if c then w = math.max(w, vim.api.nvim_strwidth(c.text)) end
+                    end
+                    widths[col] = w
+                end
+                parsed.col_widths = widths
+                return parsed
+            end
+            local orig_table_render = md_table.render
+            md_table.render = function(parsed, ...)
+                return orig_table_render(expand_table_br(parsed), ...)
+            end
+
             -- Re-render on window resize: explicit max_width disables the
             -- plugin's built-in WinResized adaptation (and auto_on opts are
             -- ignored by session reuse), so update the session in place.
