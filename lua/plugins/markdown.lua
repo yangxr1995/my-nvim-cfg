@@ -77,6 +77,12 @@ return {
         config = function()
             local preview = require("md-render").preview
 
+            -- Eye-catching marker for ==highlight== text: the plugin default
+            -- (dark olive bg + pale yellow fg) is near-invisible on dark
+            -- themes. Non-default definition wins over the plugin's
+            -- default=true re-application on every session rebuild.
+            vim.api.nvim_set_hl(0, "MdRenderHighlight", { bold = true, fg = "#1e1e2e", bg = "#f9e2af" })
+
             -- Pipe-table cells: render <br> as a real line break by splitting
             -- the row into continuation sub-rows before table rendering. The
             -- plugin only handles <br> in HTML <dt>/<dd>, not in pipe tables.
