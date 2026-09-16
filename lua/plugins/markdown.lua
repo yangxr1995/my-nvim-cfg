@@ -58,26 +58,24 @@ return {
                 end,
                 desc = "Markdown preview (float toggle)",
             },
+            {
+                "<leader>mr",
+                function()
+                    local preview = require("md-render").preview
+                    local bufnr = vim.api.nvim_get_current_buf()
+                    preview.toggle({ max_width = render_width() })
+                    -- Seed only when the window switched to the render view;
+                    -- toggling back leaves the (reused) session untouched.
+                    local state = vim.w.md_render_state
+                    if state and state.mode == "render" and state.source_buf == bufnr then
+                        seed_expanded_tables(preview, bufnr)
+                    end
+                end,
+                desc = "Markdown render toggle (in-place, source stays editable)",
+            },
         },
         config = function()
             local preview = require("md-render").preview
-
-            -- Rendered view in normal mode, source in insert mode.
-            -- Deferred: creating the render buffer inside the FileType autocmd chain
-            -- re-enters ftplugin/treesitter processing and breaks parser startup.
-            local function auto_on()
-                vim.schedule(function()
-                    local bufnr = vim.api.nvim_get_current_buf()
-                    preview.auto_on({ max_width = render_width() })
-                    seed_expanded_tables(preview, bufnr)
-                end)
-            end
-            vim.api.nvim_create_autocmd("FileType", {
-                pattern = "markdown",
-                callback = auto_on,
-            })
-            -- lazy.nvim re-triggers FileType after loading via `ft`, so the
-            -- autocmd above also covers the buffer that triggered the load.
 
             -- Pipe-table cells: render <br> as a real line break by splitting
             -- the row into continuation sub-rows before table rendering. The
@@ -95,6 +93,27 @@ return {
                 end
                 return false
             end
+            -- Original highlights/links are positioned against the full cell
+            -- text; keep only those starting within the kept segment (the
+            -- plugin clamps end positions itself).
+            local function clip_highlights(hls, max_bytes)
+                local out = {}
+                for _, h in ipairs(hls or {}) do
+                    if (h.col or 0) <= max_bytes then out[#out + 1] = h end
+                end
+                return out
+            end
+            local function clip_links(links, max_bytes)
+                local out = {}
+                for _, l in ipairs(links or {}) do
+                    if (l.col_start or 0) <= max_bytes then
+                        out[#out + 1] = vim.tbl_extend("force", l, {
+                            col_end = math.min(l.col_end or 0, max_bytes),
+                        })
+                    end
+                end
+                return out
+            end
             local function split_row_cells(cells)
                 local seg_lists, n = {}, 1
                 for col, c in ipairs(cells) do
@@ -106,13 +125,12 @@ return {
                 for k = 1, n do
                     local row = {}
                     for col, c in ipairs(cells) do
-                        -- Original highlights/links stay on the first segment
-                        -- (a prefix of the source text, so positions remain
-                        -- valid); continuation cells are plain text.
+                        local seg = seg_lists[col][k] or ""
+                        local len = #seg
                         row[col] = {
-                            text = seg_lists[col][k] or "",
-                            highlights = k == 1 and c.highlights or {},
-                            links = k == 1 and c.links or {},
+                            text = seg,
+                            highlights = k == 1 and clip_highlights(c.highlights, len) or {},
+                            links = k == 1 and clip_links(c.links, len) or {},
                         }
                     end
                     out[k] = row
@@ -130,10 +148,11 @@ return {
                 parsed.headers = (function()
                     local hs = {}
                     for col, c in ipairs(parsed.headers) do
+                        local text = table.concat(split_br_segments(c.text or ""), " ")
                         hs[col] = {
-                            text = table.concat(split_br_segments(c.text or ""), " "),
-                            highlights = c.highlights,
-                            links = c.links,
+                            text = text,
+                            highlights = clip_highlights(c.highlights, #text),
+                            links = clip_links(c.links, #text),
                         }
                     end
                     return hs
