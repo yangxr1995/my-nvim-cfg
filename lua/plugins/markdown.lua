@@ -54,6 +54,13 @@ local function decorate_render_buffers(preview, bufnr)
                         changed = true
                     end
                 end
+                -- gO on the render view: the stock ftplugin mapping only
+                -- exists on markdown buffers, so mirror it here to show the
+                -- source document's TOC.
+                vim.keymap.set("n", "gO", function()
+                    preview.toggle()
+                    require("vim.treesitter._headings").show_toc()
+                end, { buffer = session.buf, silent = true, desc = "Show an Outline of the source buffer" })
             end
         end
     end
