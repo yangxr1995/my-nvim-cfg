@@ -23,13 +23,24 @@ end
 
 local function start_job(args, text)
     stop_job()
+    local stderr_lines = {}
     current_job = vim.fn.jobstart(vim.list_extend({ "python3", script }, args), {
+        on_stderr = function(_, data)
+            for _, line in ipairs(data or {}) do
+                if line ~= "" and #stderr_lines < 5 then
+                    table.insert(stderr_lines, line)
+                end
+            end
+        end,
         on_exit = function(job_id, exit_code)
             if current_job == job_id then
                 current_job = nil
             end
             if exit_code ~= 0 then
-                vim.notify("tts: exited with code " .. exit_code, vim.log.levels.WARN)
+                -- surface script diagnostics (e.g. missing piper/model install hints)
+                local detail = #stderr_lines > 0 and table.concat(stderr_lines, "\n")
+                    or ("exited with code " .. exit_code)
+                vim.notify("tts: " .. detail, vim.log.levels.WARN)
             end
         end,
     })

@@ -9,8 +9,14 @@ import sys
 import wave
 from pathlib import Path
 
-from piper import PiperVoice
-from piper.audio_playback import AudioPlayer
+try:
+    from piper import PiperVoice
+    from piper.audio_playback import AudioPlayer
+except ImportError:
+    sys.stderr.write(
+        "piper-tts not installed. Run: python3 -m pip install piper-tts\n"
+    )
+    sys.exit(1)
 
 VOICES_DIR = Path.home() / ".local/share/nvim/tts-nvim/piper_voices"
 CACHE_DIR = Path.home() / ".cache/nvim/tts"
@@ -61,6 +67,9 @@ def main() -> None:
         replay()
     else:
         lang = arg if arg in MODELS else "zh"
+        if not MODELS[lang].exists():
+            sys.stderr.write(f"voice model not found: {MODELS[lang]}\n")
+            sys.exit(1)
         text = sys.stdin.read().strip()
         if text:
             speak(text, lang)
