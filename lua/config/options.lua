@@ -59,5 +59,9 @@ vim.cmd [[set background=dark]]
 vim.opt.virtualedit = "block"
 -- vim.opt.signcolumn = "no"
 
+-- Disable unused remote-plugin providers (no perl/ruby on this system)
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_ruby_provider = 0
+
 
 -- vim.cmd.colorscheme('catppuccin-mocha')
