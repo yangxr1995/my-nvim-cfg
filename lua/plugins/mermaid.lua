@@ -136,27 +136,21 @@ return {
                 }
             end
 
-            -- Render the fenced mermaid block under the cursor in markdown
-            -- buffers, without needing a separate .mmd file. Uses <leader>mm
-            -- because <leader>mp/<leader>mr already belong to md-render.
-            local function render_md_block()
-                local cursor = vim.api.nvim_win_get_cursor(0)[1]
-                local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+            -- Extract the fenced mermaid block containing line_no from
+            -- lines. Returns content, or nil plus a reason tag.
+            local function find_mermaid_block(lines, line_no)
                 local start = nil
                 for i, line in ipairs(lines) do
                     if start then
                         if line:match("^```") or line:match("^~~~") then
-                            if cursor >= start and cursor <= i then
+                            if line_no >= start and line_no <= i then
                                 local block = {}
                                 for j = start + 1, i - 1 do
                                     block[#block + 1] = lines[j]
                                 end
                                 local content = table.concat(block, "\n")
-                                if content:match("%S") then
-                                    return require("mermaid.render").render_source(content)
-                                end
-                                vim.notify("Mermaid: block under cursor is empty", vim.log.levels.WARN)
-                                return { ok = false }
+                                if content:match("%S") then return content end
+                                return nil, "empty"
                             end
                             start = nil
                         end
@@ -165,19 +159,52 @@ return {
                         start = i
                     end
                 end
-                vim.notify("Mermaid: cursor is not inside a ```mermaid block", vim.log.levels.WARN)
-                return { ok = false }
+                return nil, "outside"
             end
 
-            vim.api.nvim_create_autocmd("FileType", {
-                pattern = "markdown",
-                callback = function(args)
-                    vim.keymap.set("n", "<leader>mm", render_md_block, {
-                        buffer = args.buf,
-                        silent = true,
-                        desc = "Render mermaid block under cursor",
-                    })
-                end,
+            -- Render the mermaid block under the cursor, in markdown buffers
+            -- or in md-render render views. Render views strip the fences,
+            -- so the cursor line is mapped back to the source buffer via the
+            -- session's source_line_map before extraction. Uses <leader>mm
+            -- because <leader>mp/<leader>mr already belong to md-render.
+            -- Registered globally: md-render sets the render buffer's
+            -- filetype inside eventignore=all, so a FileType autocmd would
+            -- never fire for it; non-target filetypes return silently.
+            local function render_md_block()
+                local bufnr = vim.api.nvim_win_get_buf(0)
+                local ft = vim.bo[bufnr].filetype
+                if ft ~= "markdown" and ft ~= "md-render" then
+                    return { ok = false }
+                end
+                local lines, line_no
+                if ft == "md-render" then
+                    local session = require("md-render").preview._sessions[bufnr]
+                    local map = session and session.content and session.content.source_line_map
+                    if not (map and session.source_bufnr and vim.api.nvim_buf_is_valid(session.source_bufnr)) then
+                        vim.notify("Mermaid: no source mapping for this render view", vim.log.levels.WARN)
+                        return { ok = false }
+                    end
+                    line_no = map[vim.api.nvim_win_get_cursor(0)[1]] or 1
+                    lines = vim.api.nvim_buf_get_lines(session.source_bufnr, 0, -1, false)
+                else
+                    line_no = vim.api.nvim_win_get_cursor(0)[1]
+                    lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+                end
+                local content, why = find_mermaid_block(lines, line_no)
+                if not content then
+                    vim.notify(
+                        why == "empty" and "Mermaid: block under cursor is empty"
+                            or "Mermaid: cursor is not inside a ```mermaid block",
+                        vim.log.levels.WARN
+                    )
+                    return { ok = false }
+                end
+                return require("mermaid.render").render_source(content)
+            end
+
+            vim.keymap.set("n", "<leader>mm", render_md_block, {
+                silent = true,
+                desc = "Render mermaid block under cursor",
             })
 
             -- Buffer-local keymaps on mermaid buffers only, so they shadow
