@@ -18,12 +18,13 @@ return {
                 "vim",
                 "vimdoc",
                 "cmake",
+                "mermaid",
             })
 
             -- Highlighting is provided by Neovim core via vim.treesitter.start();
             -- the main-branch rewrite no longer ships a highlight module.
             vim.api.nvim_create_autocmd("FileType", {
-                pattern = { "bash", "c", "cpp", "lua", "markdown", "python", "vim", "vimdoc", "cmake" },
+                pattern = { "bash", "c", "cpp", "lua", "markdown", "python", "vim", "vimdoc", "cmake", "mermaid" },
                 callback = function()
                     pcall(vim.treesitter.start)
                 end,
