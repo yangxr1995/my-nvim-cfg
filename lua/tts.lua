@@ -1,38 +1,46 @@
--- tts.lua
+-- tts.lua: local Piper TTS, synthesis/playback handled by tools/tts_speak.py
 
 -- 默认配置
 local config = {
-    rate = "+20%", -- 默认播放速度（不调整）
+    lang = "zh", -- "zh" or "en", maps to models in tools/tts_speak.py
 }
 
+local script = vim.fn.stdpath("config") .. "/tools/tts_speak.py"
+local last_wav = vim.fn.stdpath("cache") .. "/tts/last_audio.wav"
+local current_job = nil
 
 -- 设置配置
 local function setup(opts)
     config = vim.tbl_extend("force", config, opts or {})
 end
 
--- 检查并启动 mocp 服务器
-local function ensure_mocp_server()
-    -- 检查 mocp 服务器是否正在运行
-    local check_cmd = "mocp -i > /dev/null 2>&1"
-    vim.fn.system(check_cmd)
-    -- system() returns command output, NOT exit code; exit code lives in v:shell_error
-    -- (do NOT "simplify" this back to `system(...) == 0`, it is always false)
-    local is_running = vim.v.shell_error == 0
+local function stop_job()
+    if current_job then
+        vim.fn.jobstop(current_job)
+        current_job = nil
+    end
+end
 
-    -- 如果未运行，则启动 mocp 服务器
-    if not is_running then
-        print("Starting mocp server...")
-        vim.fn.system("mocp -S &")
-        vim.fn.system("sleep 1")
+local function start_job(args, text)
+    stop_job()
+    current_job = vim.fn.jobstart(vim.list_extend({ "python3", script }, args), {
+        on_exit = function(job_id, exit_code)
+            if current_job == job_id then
+                current_job = nil
+            end
+            if exit_code ~= 0 then
+                vim.notify("tts: exited with code " .. exit_code, vim.log.levels.WARN)
+            end
+        end,
+    })
+    if text then
+        vim.fn.chansend(current_job, text)
+        vim.fn.chanclose(current_job, "stdin")
     end
 end
 
 -- 定义插件功能
 local function text_to_speech()
-    -- 确保 mocp 服务器已启动
-    ensure_mocp_server()
-
     -- 获取当前选中的文本
     local start_line, start_col = unpack(vim.api.nvim_buf_get_mark(0, "<"))
     local end_line, end_col = unpack(vim.api.nvim_buf_get_mark(0, ">"))
@@ -59,69 +67,31 @@ local function text_to_speech()
     text = string.gsub(text, "/", " ")
     text = string.gsub(text, "\"", " ")
 
-    -- print("Selected text: ", text)
-
-    -- 生成固定路径的 MP3 文件
-    local cache_dir = vim.fn.stdpath("cache") .. "/tts"
-    vim.fn.mkdir(cache_dir, "p")
-    local audio_file = cache_dir .. "/last_audio.mp3"
-
-    local voice = "zh-TW-HsiaoChenNeural"
-
-    local cmd = string.format('tts.py --txt "%s" --output "%s" --speed 1.3 --voice_id female-tianmei', text, audio_file)
-
-    -- 异步执行 cmd 命令
-    vim.fn.jobstart(cmd, {
-        on_exit = function(_, exit_code)
-            if exit_code == 0 then
-                -- 检查是否成功生成 MP3 文件
-                if vim.fn.filereadable(audio_file) == 1 then
-                    -- 使用 mocp 播放 MP3 文件
-                    local play_cmd = string.format("mocp -l %s &", audio_file)
-                    vim.fn.jobstart(play_cmd, {
-                        on_exit = function(_, play_exit_code)
-                            if play_exit_code == 0 then
-                                print("Playing selected text as audio...")
-                            else
-                                print("Failed to play MP3 file!")
-                            end
-                        end
-                    })
-                else
-                    print("Failed to generate MP3 file!")
-                end
-            else
-                print("Failed to convert text to speech!")
-            end
-        end
-    })
+    start_job({ config.lang }, text)
+    print("Playing selected text as audio...")
 end
 
 -- 停止当前音频播放
 local function stop_audio()
-    vim.fn.system("mocp -x")
-    print("Audio playback stopped.")
+    if current_job then
+        stop_job()
+        print("Audio playback stopped.")
+    else
+        print("No audio playing.")
+    end
 end
 
 -- 重新播放最近的音频
 local function replay_audio()
-    -- 生成固定路径的 MP3 文件
-    local cache_dir = vim.fn.stdpath("cache") .. "/tts"
-    vim.fn.mkdir(cache_dir, "p")
-    local audio_file = cache_dir .. "/last_audio.mp3"
-
-    print("audio_file : ", audio_file);
-    if audio_file and vim.fn.filereadable(audio_file) == 1 then
-        ensure_mocp_server()
-        local play_cmd = string.format("mocp -l %s &", audio_file)
-        vim.fn.system(play_cmd)
+    if vim.fn.filereadable(last_wav) == 1 then
+        start_job({ "replay" })
         print("Replaying last audio...")
     else
         print("No recent audio file found!")
     end
 end
 
-vim.api.nvim_set_keymap("v", "<leader>tts", ":lua require('tts').text_to_speech()<CR>", { noremap = true, silent = true, desc = "Text To Speed" })
+vim.api.nvim_set_keymap("v", "<leader>tts", ":lua require('tts').text_to_speech()<CR>", { noremap = true, silent = true, desc = "Text To Speech" })
 vim.api.nvim_set_keymap("n", "<leader>tts", ":lua require('tts').stop_audio()<CR>", { noremap = true, silent = true , desc = "TTS Stop" })
 vim.api.nvim_set_keymap("n", "<leader>ttr", ":lua require('tts').replay_audio()<CR>", { noremap = true, silent = true, desc = "TTS Replay" })
 
@@ -132,4 +102,3 @@ return {
     stop_audio = stop_audio,
     replay_audio = replay_audio,
 }
-
