@@ -14,6 +14,20 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+-- This config manages plugins with lazy.nvim only, but catppuccin's integration
+-- detection probes `vim.pack.get()`, whose lock-sync side effect force-creates
+-- `site/pack/core/opt` on every startup. That empty dir makes both lazy.nvim's
+-- and `vim.pack`'s checkhealth warn. Short-circuit `get` when vim.pack is
+-- unused (no lockfile) so the directory is never created.
+if vim.uv.fs_stat(vim.fn.stdpath("config") .. "/nvim-pack-lock.json") == nil then
+  pcall(function()
+    local pack = require("vim.pack")
+    pack.get = function()
+      return {}
+    end
+  end)
+end
+
 
 -- Setup lazy.nvim
 require("lazy").setup({
