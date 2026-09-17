@@ -1,6 +1,6 @@
 -- checkhealth entry for the tts module (`:checkhealth tts`)
 
-local voices_dir = vim.fn.stdpath("data") .. "/tts-nvim/piper_voices"
+local voices_dir = vim.fn.stdpath("data") .. "/tts/piper_voices"
 local models = {
     "zh_CN-huayan-medium",
     "en_US-lessac-medium",

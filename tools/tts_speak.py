@@ -18,7 +18,7 @@ except ImportError:
     )
     sys.exit(1)
 
-VOICES_DIR = Path.home() / ".local/share/nvim/tts-nvim/piper_voices"
+VOICES_DIR = Path.home() / ".local/share/nvim/tts/piper_voices"
 CACHE_DIR = Path.home() / ".cache/nvim/tts"
 MODELS = {
     "zh": VOICES_DIR / "zh_CN-huayan-medium.onnx",
