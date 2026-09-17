@@ -1,6 +1,8 @@
 return {
     {
         "nvim-treesitter/nvim-treesitter",
+        -- master branch is archived; the rewrite lives on main (install() API)
+        branch = "main",
         lazy = false,
         priority = 1000,
         build = ":TSUpdate",
