@@ -1,11 +1,15 @@
--- tts.lua: local Piper TTS, synthesis/playback handled by tools/tts_speak.py
+-- tts.lua: local TTS, synthesis/playback handled by tools/tts_speak_rapid.py
 
 -- 默认配置
 local config = {
-    lang = "zh", -- "zh" or "en", maps to models in tools/tts_speak.py
+    -- "kokoro" (default) or "moss", see BACKENDS in tools/tts_speak_rapid.py
+    backend = "kokoro",
+    -- backend = "moss",
+    -- python interpreter with rapidtts installed
+    python = "/root/test/tts/.venv/bin/python",
 }
 
-local script = vim.fn.stdpath("config") .. "/tools/tts_speak.py"
+local rapid_script = vim.fn.stdpath("config") .. "/tools/tts_speak_rapid.py"
 local last_wav = vim.fn.stdpath("cache") .. "/tts/last_audio.wav"
 local current_job = nil
 
@@ -21,10 +25,10 @@ local function stop_job()
     end
 end
 
-local function start_job(args, text)
+local function start_job(cmd, text)
     stop_job()
     local stderr_lines = {}
-    current_job = vim.fn.jobstart(vim.list_extend({ "python3", script }, args), {
+    current_job = vim.fn.jobstart(cmd, {
         on_stderr = function(_, data)
             for _, line in ipairs(data or {}) do
                 if line ~= "" and #stderr_lines < 5 then
@@ -37,7 +41,7 @@ local function start_job(args, text)
                 current_job = nil
             end
             if exit_code ~= 0 then
-                -- surface script diagnostics (e.g. missing piper/model install hints)
+                -- surface script diagnostics (e.g. missing backend install hints)
                 local detail = #stderr_lines > 0 and table.concat(stderr_lines, "\n")
                     or ("exited with code " .. exit_code)
                 vim.notify("tts: " .. detail, vim.log.levels.WARN)
@@ -78,7 +82,7 @@ local function text_to_speech()
     text = string.gsub(text, "/", " ")
     text = string.gsub(text, "\"", " ")
 
-    start_job({ config.lang }, text)
+    start_job({ config.python, rapid_script, config.backend }, text)
     print("Playing selected text as audio...")
 end
 
@@ -95,7 +99,7 @@ end
 -- 重新播放最近的音频
 local function replay_audio()
     if vim.fn.filereadable(last_wav) == 1 then
-        start_job({ "replay" })
+        start_job({ config.python, rapid_script, "replay" })
         print("Replaying last audio...")
     else
         print("No recent audio file found!")
