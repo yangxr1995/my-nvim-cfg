@@ -68,6 +68,26 @@ M.check = function()
       and require("mermaid").config.lint.enabled
   check_mmdc(lint_on and health.error or health.warn)
 
+  -- Terminal render capability routes <leader>mm: "kitty" renders
+  -- inline, "chafa" renders PNG via mmdc into the desktop viewer;
+  -- "none" (no chafa, non-kitty terminal) fails both paths.
+  vim.health.start("mermaid.nvim: render capability (<leader>mm)")
+  if has("chafa") then
+    local ver = vim.fn.system({ "chafa", "--version" }):match("version ([%d%.]+)") or "?"
+    health.ok("chafa " .. ver .. " (<leader>mm renders PNG via mmdc and opens the desktop viewer)")
+  else
+    health.warn(
+      "chafa NOT installed",
+      "Outside kitty/iTerm2, <leader>mm has no working render path without chafa",
+      "Install: apt install chafa"
+    )
+  end
+  local ok_render, render_mod = pcall(require, "mermaid.render")
+  if ok_render then
+    local cap = render_mod.detect_capability()
+    health.info("detected capability: " .. cap .. " (" .. render_mod.capability_label(cap) .. ")")
+  end
+
   -- Desktop image viewer chain used by <leader>mr
   vim.health.start("mermaid.nvim: image viewer (<leader>mr)")
   if vim.env.DISPLAY or vim.env.WAYLAND_DISPLAY then
