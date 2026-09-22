@@ -1,3 +1,12 @@
+# ======================== 第一步：先处理需要控制台输入/输出的代码 ========================
+# 加载 nvm（有隐性输出，移到 P10k 即时提示之前）
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# 加载 fzf（有隐性输出，移到 P10k 即时提示之前）
+
+# ======================== 第二步：P10k 即时提示（必须靠近文件顶部） ========================
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -5,22 +14,18 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+# ======================== 第三步：无输出的基础配置（可放在 P10k 之后） ========================
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
+export PATH=${PATH}:/usr/local/bin
 
 # Path to your Oh My Zsh installation.
 export ZSH="/root/.oh-my-zsh"
 
-# Set name of the theme to load --- if set to "random", it will
-# load a random theme each time Oh My Zsh is loaded, in which case,
-# to know which specific one was loaded, run: echo $RANDOM_THEME
-# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
+# Set name of the theme to load --- 注意：P10k 会覆盖这个主题，这里可保留但实际无效
 ZSH_THEME="robbyrussell"
 
 # Set list of themes to pick from when loading at random
-# Setting this variable when ZSH_THEME=random will cause zsh to load
-# a theme from this variable instead of looking in $ZSH/themes/
-# If set to an empty array, this variable will have no effect.
 # ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
 
 # Uncomment the following line to use case-sensitive completion.
@@ -51,9 +56,6 @@ ZSH_THEME="robbyrussell"
 # ENABLE_CORRECTION="true"
 
 # Uncomment the following line to display red dots whilst waiting for completion.
-# You can also set it to another string to have that shown instead of the default red dots.
-# e.g. COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
-# Caution: this setting can cause issues with multiline prompts in zsh < 5.7.1 (see #5765)
 # COMPLETION_WAITING_DOTS="true"
 
 # Uncomment the following line if you want to disable marking untracked files
@@ -63,32 +65,24 @@ ZSH_THEME="robbyrussell"
 
 # Uncomment the following line if you want to change the command execution time
 # stamp shown in the history command output.
-# You can set one of the optional three formats:
-# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# or set a custom format using the strftime function format specifications,
-# see 'man strftime' for details.
 # HIST_STAMPS="mm/dd/yyyy"
 
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
 # Which plugins would you like to load?
-# Standard plugins can be found in $ZSH/plugins/
-# Custom plugins may be added to $ZSH_CUSTOM/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
 plugins=(
-	# other plugins...
-	zsh-autosuggestions
-	zsh-syntax-highlighting
-	git
-	z
+    zsh-autosuggestions
+    zsh-syntax-highlighting
+    git
+    z
 )
 
+# 加载 Oh My Zsh（无输出，可放在此处）
 source $ZSH/oh-my-zsh.sh
 
+# ======================== 第四步：用户自定义配置（无输出） ========================
 # User configuration
-
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
@@ -104,31 +98,48 @@ source $ZSH/oh-my-zsh.sh
 # Compilation flags
 # export ARCHFLAGS="-arch $(uname -m)"
 
-# Set personal aliases, overriding those provided by Oh My Zsh libs,
-# plugins, and themes. Aliases can be placed here, though Oh My Zsh
-# users are encouraged to define aliases within a top-level file in
-# the $ZSH_CUSTOM folder, with .zsh extension. Examples:
-# - $ZSH_CUSTOM/aliases.zsh
-# - $ZSH_CUSTOM/macos.zsh
-# For a full list of active aliases, run `alias`.
-#
+# Set personal aliases
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-source ~/powerlevel10k/powerlevel10k.zsh-theme
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+# 加载 Powerlevel10k 主题（移到 Oh My Zsh 之后，P10k 即时提示之后）
+source ~/.powerlevel10k/powerlevel10k.zsh-theme
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+# lazygit 缓存配置
+export LAZYGIT_CACHE_GIT_COMMANDS=true
+export LAZYGIT_CACHE_TTL=10
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# IP 配置
+export UV600_IP="10.125.9.2"
+export UV800_IP="10.125.9.140"
+export UV100_IP="192.168.180.13"
 
+# 显示相关配置
+export DISPLAY=:0
+export WAYLAND_DISPLAY=wayland-0
+export XDG_RUNTIME_DIR=/mnt/wslg/runtime-dir
 
-. "$HOME/.local/bin/env"
+# 编辑器配置
+export EDITOR=nvim
 
+export PATH=${PATH}:/root/.local/bin
+
+# export PLANNOTATOR_REMOTE=1
+export PLANNOTATOR_PORT=9999  # Choose a port you'll forward
+
+# 捕获 yazi 启动目录，供 edit opener 回到原目录打开编辑器
+function yazi() {
+	YAZI_ORIG_CWD="$PWD" command yazi "$@"
+}
+
+function y() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	YAZI_ORIG_CWD="$PWD" command yazi "$@" --cwd-file="$tmp"
+	IFS= read -r -d '' cwd < "$tmp"
+	[ "$cwd" != "$PWD" ] && [ -d "$cwd" ] && builtin cd -- "$cwd"
+	rm -f -- "$tmp"
+}
 
 # bun completions
 [ -s "/root/.bun/_bun" ] && source "/root/.bun/_bun"
@@ -137,15 +148,16 @@ export NVM_DIR="$HOME/.nvm"
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
-export DISPLAY=:0
-export WAYLAND_DISPLAY=wayland-0
-export XDG_RUNTIME_DIR=/mnt/wslg/runtime-dir
-
-export PATH=/root/.cargo/bin:$PATH
-
-export N8N_SECURE_COOKIE=false
 # opencode
 export PATH=/root/.opencode/bin:$PATH
+export PATH=/root/.cargo/bin:$PATH
+
+alias code-review-graph='uvx code-review-graph'
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # Ctrl+h/j/k/l: Zellij pane navigation (only when buffer is empty)
 # When Neovim is focused, it captures terminal input, so these don't interfere.
@@ -174,3 +186,11 @@ if [[ -n $ZELLIJ ]]; then
     bindkey '^L' _zellij_nav_right
 fi
 
+
+# Added by codebase-memory-mcp install
+export PATH="/root/.local/bin:$PATH"
+
+# QODERCN_DISPATCHER_PATH v1
+path=("$HOME/.qoder-cn/entry" ${path:#"$HOME/.qoder-cn/entry"})
+export PATH
+# END QODERCN_DISPATCHER_PATH v1
