@@ -1,5 +1,10 @@
 return {
   "nickjvandyke/opencode.nvim",
+  -- Last v1-compatible commit (includes directory-routing fix #239).
+  -- main migrated to OpenCode v2 (service.json + /api/*), incompatible with
+  -- installed opencode CLI 1.18.32 (v1: process scan + /session).
+  -- Do NOT use version = "*": a v2.0.0 tag exists and would be selected.
+  commit = "71fb506ef1898048bc548668f31f495ad6c29453",
   dependencies = {
     -- Recommended for `ask()` and `select()`.
     -- Required for `snacks` provider.
