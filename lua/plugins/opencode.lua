@@ -45,5 +45,28 @@ return {
       end
       return orig_disconnect(self, ...)
     end
+
+    -- 修复上游 #239（commit 71fb506）引入的回归。
+    -- `Server:curl()` 给所有请求无条件注入 `x-opencode-directory: nvim-cwd`，
+    -- 包括发现阶段的 `GET /path` 探测。v1 server 按该 header 返回 directory
+    -- 而非真实工作目录，导致所有被发现的 server cwd 都等于 nvim cwd，
+    -- 目录过滤匹配到全部实例，即使当前目录只有一个 opencode 也弹选择框。
+    -- 仅对 /path 探测抑制该 header；/tui/* 与 /event 保留 #239 的 TUI 路由行为。
+    local upstream_curl = Server.curl
+    Server.curl = function(self, path, ...)
+      if path ~= "/path" then
+        return upstream_curl(self, path, ...)
+      end
+      -- curl 构造 cmd 时同步读取 vim.fn.getcwd()，空串即跳过 header 注入；
+      -- 仅在此同步窗口内替换，jobstart 返回后立即恢复。
+      local real_getcwd = vim.fn.getcwd
+      vim.fn.getcwd = function() return "" end
+      local ok, job_id = pcall(upstream_curl, self, path, ...)
+      vim.fn.getcwd = real_getcwd
+      if not ok then
+        error(job_id)
+      end
+      return job_id
+    end
   end,
 }
