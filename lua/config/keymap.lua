@@ -15,8 +15,6 @@ local term_opts = { silent = true }
 -- Shorten function name
 local keymap = vim.api.nvim_set_keymap
 
--- Window/Pane navigation handled by smart-splits.nvim (see plugins/tmux.lua)
-
 -- Resize with arrows
 keymap("n", "<C-Up>", ":resize -2<CR>", { noremap = true, silent = true, desc = "调整窗口大小" })
 keymap("n", "<C-Down>", ":resize +2<CR>", { noremap = true, silent = true, desc = "调整窗口大小" })
@@ -45,9 +43,6 @@ vim.keymap.set("n", "<leader>cq", function()
     vim.cmd("copen")
   end
 end, { desc = "切换 quickfix 窗口" })
-
--- Terminal mode navigation handled by smart-splits.nvim (see plugins/tmux.lua)
-
 
 -- high light
 local function cursor_line_highlight()
