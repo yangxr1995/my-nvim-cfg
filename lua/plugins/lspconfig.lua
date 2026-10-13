@@ -96,9 +96,10 @@ return {
                     end, { buffer = event.buf, desc = 'LSP: 切换 Inlay Hints' })
                 end
 
-                -- 光标下单词高亮
+                -- 光标下单词高亮（组必须无条件创建：下方 LspDetach 按名称引用它，
+                -- 若首个 attach 的客户端不支持 documentHighlight，detach 时会报 Invalid 'group'）
+                local highlight_augroup = vim.api.nvim_create_augroup('lsp-highlight', { clear = false })
                 if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
-                    local highlight_augroup = vim.api.nvim_create_augroup('lsp-highlight', { clear = false })
                     vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
                         buffer = event.buf,
                         group = highlight_augroup,
