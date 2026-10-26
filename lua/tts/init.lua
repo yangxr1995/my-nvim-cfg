@@ -12,6 +12,7 @@ local config = {
 local rapid_script = vim.fn.stdpath("config") .. "/tools/tts_speak_rapid.py"
 local last_wav = vim.fn.stdpath("cache") .. "/tts/last_audio.wav"
 local current_job = nil
+local stopped_jobs = {} -- 已被主动 jobstop 的 job id，退出时不报警
 
 -- 设置配置
 local function setup(opts)
@@ -20,6 +21,8 @@ end
 
 local function stop_job()
     if current_job then
+        -- 标记为主动停止，on_exit 时跳过报警（jobstop 会导致非零退出码）
+        stopped_jobs[current_job] = true
         vim.fn.jobstop(current_job)
         current_job = nil
     end
@@ -29,22 +32,39 @@ local function start_job(cmd, text)
     stop_job()
     local stderr_lines = {}
     current_job = vim.fn.jobstart(cmd, {
+        on_stdout = function(_, data)
+            for _, line in ipairs(data or {}) do
+                -- 脚本用 [tts] 前缀报告阶段(生成/播放), 覆盖式回显不刷屏
+                local msg = line:match("^%[tts%] (.+)$")
+                if msg then
+                    vim.api.nvim_echo({ { "tts: " .. msg, "Normal" } }, false, {})
+                end
+            end
+        end,
         on_stderr = function(_, data)
             for _, line in ipairs(data or {}) do
-                if line ~= "" and #stderr_lines < 5 then
-                    table.insert(stderr_lines, line)
+                if line ~= "" then
+                    -- 滑动窗口只保留末尾 5 行：真实错误在 stderr 末尾，前面是库的日志噪音
+                    if #stderr_lines >= 5 then
+                        table.remove(stderr_lines, 1)
+                    end
+                    -- 去掉 colorlog 的 ANSI 颜色码，避免通知里出现 ^[[32m 乱码
+                    local clean = line:gsub("\27%[[%d;]*m", "")
+                    table.insert(stderr_lines, clean)
                 end
             end
         end,
         on_exit = function(job_id, exit_code)
-            if current_job == job_id then
-                current_job = nil
-            end
-            if exit_code ~= 0 then
+            if stopped_jobs[job_id] then
+                stopped_jobs[job_id] = nil
+            elseif exit_code ~= 0 then
                 -- surface script diagnostics (e.g. missing backend install hints)
                 local detail = #stderr_lines > 0 and table.concat(stderr_lines, "\n")
                     or ("exited with code " .. exit_code)
                 vim.notify("tts: " .. detail, vim.log.levels.WARN)
+            end
+            if current_job == job_id then
+                current_job = nil
             end
         end,
     })
@@ -83,16 +103,16 @@ local function text_to_speech()
     text = string.gsub(text, "\"", " ")
 
     start_job({ config.python, rapid_script, config.backend }, text)
-    print("Playing selected text as audio...")
+    print("tts: 正在生成音频...")
 end
 
 -- 停止当前音频播放
 local function stop_audio()
     if current_job then
         stop_job()
-        print("Audio playback stopped.")
+        print("tts: 已停止")
     else
-        print("No audio playing.")
+        print("tts: 没有正在播放的音频")
     end
 end
 
@@ -100,9 +120,9 @@ end
 local function replay_audio()
     if vim.fn.filereadable(last_wav) == 1 then
         start_job({ config.python, rapid_script, "replay" })
-        print("Replaying last audio...")
+        print("tts: 正在播放...")
     else
-        print("No recent audio file found!")
+        print("tts: 没有最近的音频文件")
     end
 end
 
