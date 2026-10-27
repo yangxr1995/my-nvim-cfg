@@ -24,6 +24,12 @@ keymap("n", "<C-Right>", ":vertical resize +2<CR>", { noremap = true, silent = t
 -- Navigate buffers
 keymap("n", "<S-l>", ":bnext<CR>", { noremap = true, silent = true, desc = "切换buffer" })
 keymap("n", "<S-h>", ":bprevious<CR>", { noremap = true, silent = true, desc = "切换buffer" })
+
+-- Ctrl+1..9 切换到第 N 个 buffer（按 bufferline 显示顺序）
+for i = 1, 9 do
+  keymap("n", "<C-" .. i .. ">", ":BufferLineGoToBuffer " .. i .. "<CR>",
+    { noremap = true, silent = true, desc = "切换到第 " .. i .. " 个buffer" })
+end
 -- Move text up and down
 keymap("n", "<A-j>", "<Esc>:m .+1<CR>==gi", { noremap = true, silent = true, desc = "文本下移" })
 keymap("n", "<A-k>", "<Esc>:m .-2<CR>==gi", { noremap = true, silent = true, desc = "文本上移" })
